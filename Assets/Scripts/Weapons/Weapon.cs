@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using Interfaces;
+using Player;
 using Weapons.Shooting;
 using UnityEngine;
 
 namespace Weapons
 {
-    public sealed class Weapon : MonoBehaviour, IInventoryItem
+    public class Weapon : MonoBehaviour, IInventoryItem
     {
         public WeaponSettings Settings;
         
@@ -24,21 +25,15 @@ namespace Weapons
             Settings.Initialize(gameObject, transform);
             InitializeShootingLogic();
         }
-        
-        private void OnEnable()
-        {
-            InputHandler.FireKeyPressed += () => StartRoutineAsVariable(AttackingRoutine(), ref _attackingRoutine);
-            InputHandler.FireKeyUnpressed += () => StopRoutineAsVariable(ref _attackingRoutine);
-            InputHandler.FireKeyUnpressed += () => StartRoutineAsVariable(WeaponCoolingRoutine(), ref _coolingRoutine);
-            InputHandler.ReloadKeyPressed += () => StartRoutineAsVariable(ReloadRoutine(), ref _reloadingRoutine);
-        }
 
-        private void OnDisable()
+        private void OnFireKeyPressed(FireKeyPressedEventArgs args) => StartRoutineAsVariable(AttackingRoutine(), ref _attackingRoutine);
+
+        private void OnReloadKeyPressed(ReloadKeyPressedEventArgs args) => StartRoutineAsVariable(ReloadRoutine(), ref _reloadingRoutine);
+
+        private void OnFireKeyUnpressed(FireKeyUnpressedEventArgs args)
         {
-            // TODO: Избавиться от анонимного делегата через Publisher-Subscripter
-            InputHandler.FireKeyPressed -= () => StartRoutineAsVariable(AttackingRoutine(), ref _attackingRoutine);
-            InputHandler.FireKeyUnpressed -= () => StopRoutineAsVariable(ref _attackingRoutine);
-            InputHandler.ReloadKeyPressed -= () => StartRoutineAsVariable(ReloadRoutine(), ref _reloadingRoutine);
+            StopRoutineAsVariable(ref _attackingRoutine);
+            StartRoutineAsVariable(WeaponCoolingRoutine(), ref _coolingRoutine);
         }
 
         private void InitializeShootingLogic()

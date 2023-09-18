@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Player
 {
@@ -22,12 +21,12 @@ namespace Player
 
         private void OnEnable()
         {
-            InputHandler.MovementKeyPressed += OnMovement;
+            EventManager.Subscribe<MovementKeyPressedEventArgs>(OnMovement);
         }
 
         private void OnDisable()
         {
-            InputHandler.MovementKeyPressed -= OnMovement;
+            EventManager.Unsubscribe<MovementKeyPressedEventArgs>(OnMovement);
         }
 
         private void FixedUpdate()
@@ -35,7 +34,7 @@ namespace Player
             MoveCharacter();
         }
 
-        private void OnMovement(Vector3 movementDirection) => _movementDirection = movementDirection.normalized;
+        private void OnMovement(MovementKeyPressedEventArgs args) => _movementDirection = args.MovementDirection.normalized;
 
         private void MoveCharacter()
         {

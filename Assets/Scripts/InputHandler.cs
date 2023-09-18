@@ -1,15 +1,11 @@
 using System;
+using Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public sealed class InputHandler : MonoBehaviour
 {
     private InputSettings _inputSettings;
-
-    public static event Action<Vector3> MovementKeyPressed;
-    public static event Action FireKeyPressed;
-    public static event Action FireKeyUnpressed;
-    public static event Action ReloadKeyPressed;
 
     public static event Action<float> WeaponPickKeyPressed;
 
@@ -26,6 +22,7 @@ public sealed class InputHandler : MonoBehaviour
     private void Initialize()
     {
         _inputSettings = new InputSettings();
+        
         _inputSettings.Player.Movement.performed += OnMovementKeyPressed;
         _inputSettings.Player.Movement.canceled += OnMovementKeyPressed;
         
@@ -39,31 +36,29 @@ public sealed class InputHandler : MonoBehaviour
 
     private void OnMovementKeyPressed(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("Movement");
         Vector3 movementDirection = callbackContext.ReadValue<Vector3>();
-        MovementKeyPressed?.Invoke(movementDirection);
+        EventManager.RaiseEvent(new MovementKeyPressedEventArgs(movementDirection));
     }
 
     private void OnFireKeyPressed(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("Fired");
-        FireKeyPressed?.Invoke();
+        EventManager.RaiseEvent(new FireKeyPressedEventArgs());
     }
 
     private void OnFireKeyUnpressed(InputAction.CallbackContext callbackContext)
     {
-        Debug.Log("Unfired");
-        FireKeyUnpressed?.Invoke();
+        EventManager.RaiseEvent(new FireKeyUnpressedEventArgs());
     }
 
     private void OnReloadKeyPressed(InputAction.CallbackContext callbackContext)
     {
-        ReloadKeyPressed?.Invoke();
+        EventManager.RaiseEvent(new ReloadKeyPressedEventArgs());
     }
 
     private void OnWeaponPickKeyPressed(InputAction.CallbackContext callbackContext)
     {
         float keyPressed = callbackContext.ReadValue<float>();
+        EventManager.RaiseEvent(new WeaponSelectKeyPressedEventArgs(keyPressed));
         WeaponPickKeyPressed?.Invoke(keyPressed);
     }
 }

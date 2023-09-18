@@ -1,64 +1,63 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Interfaces;
 using UnityEngine;
 using Weapons;
 
 namespace Player
 {
-    [RequireComponent(typeof(Weapon))]
     public class PlayerInventory : MonoBehaviour
     {
+        [SerializeField] private InventoryDictionary _inventoryItems;
         private IInventoryItem _currentInventoryItem;
-
-        private Dictionary<InventoryItems, IInventoryItem> _inventoryItems;
 
         private void Start()
         {
-            _inventoryItems = new Dictionary<InventoryItems, IInventoryItem>()
+            _inventoryItems = new InventoryDictionary()
             {
-                [InventoryItems.Primary] = null,
-                [InventoryItems.Secondary] = null,
-                [InventoryItems.Melee] = null
+                [InventoryItemType.Primary] = GetComponentInChildren<PrimaryWeapon>(),
+                [InventoryItemType.Secondary] = GetComponentInChildren<SecondaryWeapon>(),
+                [InventoryItemType.Melee] = GetComponentInChildren<MeleeWeapon>()
             };
         } 
 
         private void OnEnable()
         {
-            InputHandler.WeaponPickKeyPressed += ChangeCurrentItem;
+            EventManager.Subscribe<WeaponSelectKeyPressedEventArgs>(ChangeCurrentItem);
         }
 
         private void OnDisable()
         {
-            InputHandler.WeaponPickKeyPressed -= ChangeCurrentItem;
+            EventManager.Unsubscribe<WeaponSelectKeyPressedEventArgs>(ChangeCurrentItem);
+        }
+        
+        private void ChangeCurrentItem(WeaponSelectKeyPressedEventArgs args)
+        {
+            InventoryItemType inventoryItemType = (InventoryItemType)args.KeyCode;
+            ChangeCurrentItem(inventoryItemType);
+            Debug.Log(inventoryItemType);
         }
 
-        //TODO: Rewrite this piece of sss... something bad
-        private void ChangeCurrentItem(float keyPressed)
+        public void ChangeCurrentItem(InventoryItemType inventoryItemType)
         {
-            InventoryItems inventoryItem = (InventoryItems)keyPressed;
-            ChangeCurrentItem(inventoryItem);
-        }
-
-        public void ChangeCurrentItem(InventoryItems inventoryItem)
-        {
-            if (_inventoryItems.TryGetValue(inventoryItem, out IInventoryItem item))
+            if (_inventoryItems.TryGetValue(inventoryItemType, out IInventoryItem item))
             {
                 if (item != null)
                 {
-                    _currentInventoryItem?.Deselect(); // Деактивируем текущий предмет
+                    _currentInventoryItem?.Deselect();
                     _currentInventoryItem = item;
-                    _currentInventoryItem.Select(); // Активируем новый предмет
+                    _currentInventoryItem.Select();
                 }
             }
         }
 
-        public void AddItem(InventoryItems inventoryItem, IInventoryItem item)
+        public void AddItem(InventoryItemType inventoryItemType, IInventoryItem item)
         {
-            if (_inventoryItems.TryGetValue(inventoryItem, out IInventoryItem currentItem))
+            if (_inventoryItems.TryGetValue(inventoryItemType, out IInventoryItem currentItem))
             {
                 if (currentItem == null)
                 {
-                    _inventoryItems[inventoryItem] = item;
+                    _inventoryItems[inventoryItemType] = item;
                 }
             }
         }
@@ -68,23 +67,23 @@ namespace Player
             _currentInventoryItem.Deselect();
             _currentInventoryItem = null;
             
-            if (_inventoryItems[InventoryItems.Primary] != null)
+            if (_inventoryItems[InventoryItemType.Primary] != null)
             {
-                ChangeCurrentItem(InventoryItems.Primary);
+                ChangeCurrentItem(InventoryItemType.Primary);
                 return;
             }
             
-            if (_inventoryItems[InventoryItems.Secondary] != null)
+            if (_inventoryItems[InventoryItemType.Secondary] != null)
             {
-                ChangeCurrentItem(InventoryItems.Secondary);
+                ChangeCurrentItem(InventoryItemType.Secondary);
                 return;
             }
             
-            ChangeCurrentItem(InventoryItems.Melee);
+            ChangeCurrentItem(InventoryItemType.Melee);
         }
     }
 
-    public enum InventoryItems
+    public enum InventoryItemType
     {
         Primary = 1,
         Secondary = 2,
