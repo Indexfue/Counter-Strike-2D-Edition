@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Player.Effects;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Utilities.Grenades
@@ -19,7 +21,7 @@ namespace Utilities.Grenades
             yield return new WaitForSeconds(_explosionTime);
             List<FlashedTarget> flashedTargetsList = GetTargetsInFlashRadius();
             FlashTargets(flashedTargetsList);
-            //Destroy(gameObject);
+            Destroy(gameObject);
         }
         
         private void Start()
@@ -61,8 +63,7 @@ namespace Utilities.Grenades
             {
                 if (target.Target.TryGetComponent<FieldOfView>(out FieldOfView fov))
                 {
-                    //TODO: AddComponent<BlindEffect> : Effect
-                    fov.SetBlindEffect(target.FlashTime, target.FlashRate);
+                    fov.AddComponent<BlindEffect>().Initialize(target.FlashRate, target.FlashTime);
                 }
             }
         }
@@ -70,7 +71,7 @@ namespace Utilities.Grenades
         private float GetFlashTimeByTargetDistance(Transform target)
         {
             float targetDistance = Vector3.Distance(target.position, transform.position);
-            return _baseFlashTime;
+            return 1;
         }
 
         private float GetFlashRateByTargetRotation(Transform target)

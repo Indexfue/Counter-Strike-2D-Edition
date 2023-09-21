@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -21,8 +22,27 @@ public sealed class FieldOfView : MonoBehaviour {
 	private List<Transform> _visibleTargets = new List<Transform>();
 	private Mesh viewMesh;
 
-	public float ViewRadius => _viewRadius;
-	public float ViewAngle => _viewAngle;
+	public float ViewRadius
+	{
+		get => _viewRadius;
+		set
+		{
+			if (value < 0) 
+				throw new ArgumentException("View Radius cannot be below zero.");
+			_viewRadius = value;
+		}
+	}
+
+	public float ViewAngle
+	{
+		get => _viewAngle;
+		set
+		{
+			if (value < 0 || 360 < value) 
+				throw new ArgumentException("View Angle have to be in 0 to 360");
+			_viewAngle = value;
+		}
+	}
 
 	public IReadOnlyList<Transform> VisibleTargets => _visibleTargets;
 
@@ -35,28 +55,6 @@ public sealed class FieldOfView : MonoBehaviour {
 		StartCoroutine (FindTargetsWithDelay(.2f));
 	}
 
-	public void SetBlindEffect(float duration, float rate) => StartCoroutine(SetBlindEffectRoutine(duration, rate));
-
-	private IEnumerator SetBlindEffectRoutine(float duration, float rate)
-	{
-		var oldViewRadius = _viewRadius;
-		var oldViewAngle = _viewAngle;
-
-		_viewAngle *= Mathf.Abs(1 - rate);
-		_viewRadius *= Mathf.Abs(1 - rate);
-
-		var tick = duration / 100f;
-		var oldViewRadiusPerTick = (oldViewRadius - _viewRadius) / 100f;
-		var oldViewAnglePerTick = (oldViewAngle - _viewAngle) / 100f;
-
-		while (_viewAngle < oldViewAngle && _viewRadius < oldViewRadius)
-		{
-			_viewAngle += oldViewAnglePerTick;
-			_viewRadius += oldViewRadiusPerTick;
-			yield return new WaitForSeconds(tick);
-		}
-	}
-	
 	private IEnumerator FindTargetsWithDelay(float delay) 
 	{
 		while (true) 
