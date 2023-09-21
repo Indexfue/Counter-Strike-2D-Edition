@@ -5,13 +5,16 @@ namespace Player
 {
     public sealed class FireKeyPressedEventArgs : EventArgs { }
     public sealed class FireKeyUnpressedEventArgs : EventArgs { }
+    
+    public sealed class SecondaryFireKeyPressedEventArgs : EventArgs { }
+    public sealed class SecondaryFireKeyUnpressedEventArgs : EventArgs { }
     public sealed class ReloadKeyPressedEventArgs : EventArgs { }
 
-    public sealed class WeaponSelectKeyPressedEventArgs : EventArgs
+    public sealed class ItemSelectKeyPressedEventArgs : EventArgs
     {
         public float KeyCode { get; }
 
-        public WeaponSelectKeyPressedEventArgs(float keyCode) => KeyCode = keyCode;
+        public ItemSelectKeyPressedEventArgs(float keyCode) => KeyCode = keyCode;
     }
 
     public sealed class MovementKeyPressedEventArgs : EventArgs

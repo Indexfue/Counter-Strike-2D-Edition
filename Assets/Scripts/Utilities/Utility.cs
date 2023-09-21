@@ -1,7 +1,10 @@
-﻿namespace Utilities
+﻿using Interfaces;
+using UnityEngine;
+
+namespace Utilities
 {
-    public sealed class Utility
+    public abstract class Utility : MonoBehaviour
     {
-        
+
     }
 }

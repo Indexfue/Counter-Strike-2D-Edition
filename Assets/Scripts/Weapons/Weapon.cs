@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Interfaces;
 using Player;
 using Weapons.Shooting;
@@ -26,14 +27,38 @@ namespace Weapons
             InitializeShootingLogic();
         }
 
-        private void OnFireKeyPressed(FireKeyPressedEventArgs args) => StartRoutineAsVariable(AttackingRoutine(), ref _attackingRoutine);
+        private void OnEnable()
+        {
+            EventManager.Subscribe<FireKeyPressedEventArgs>(OnFireKeyPressed);
+            EventManager.Subscribe<ReloadKeyPressedEventArgs>(OnReloadKeyPressed);
+            EventManager.Subscribe<FireKeyUnpressedEventArgs>(OnFireKeyUnpressed);
+        }
 
-        private void OnReloadKeyPressed(ReloadKeyPressedEventArgs args) => StartRoutineAsVariable(ReloadRoutine(), ref _reloadingRoutine);
+        private void OnDisable()
+        {
+            EventManager.Unsubscribe<FireKeyPressedEventArgs>(OnFireKeyPressed);
+            EventManager.Unsubscribe<ReloadKeyPressedEventArgs>(OnReloadKeyPressed);
+            EventManager.Unsubscribe<FireKeyUnpressedEventArgs>(OnFireKeyUnpressed);
+        }
+        private void OnFireKeyPressed(FireKeyPressedEventArgs args)
+        {
+            if (gameObject.activeSelf)
+                StartRoutineAsVariable(AttackingRoutine(), ref _attackingRoutine);
+        } 
+        
+        private void OnReloadKeyPressed(ReloadKeyPressedEventArgs args)
+        {
+            if (gameObject.activeSelf)
+                StartRoutineAsVariable(ReloadRoutine(), ref _reloadingRoutine);
+        }
 
         private void OnFireKeyUnpressed(FireKeyUnpressedEventArgs args)
         {
-            StopRoutineAsVariable(ref _attackingRoutine);
-            StartRoutineAsVariable(WeaponCoolingRoutine(), ref _coolingRoutine);
+            if (gameObject.activeSelf)
+            {
+                StopRoutineAsVariable(ref _attackingRoutine);
+                StartRoutineAsVariable(WeaponCoolingRoutine(), ref _coolingRoutine);
+            }
         }
 
         private void InitializeShootingLogic()

@@ -26,7 +26,8 @@ public sealed class FieldOfView : MonoBehaviour {
 
 	public IReadOnlyList<Transform> VisibleTargets => _visibleTargets;
 
-	void Start() {
+	private void Start() 
+	{
 		viewMesh = new Mesh ();
 		viewMesh.name = "View Mesh";
 		_viewMeshFilter.mesh = viewMesh;
@@ -34,7 +35,28 @@ public sealed class FieldOfView : MonoBehaviour {
 		StartCoroutine (FindTargetsWithDelay(.2f));
 	}
 
+	public void SetBlindEffect(float duration, float rate) => StartCoroutine(SetBlindEffectRoutine(duration, rate));
 
+	private IEnumerator SetBlindEffectRoutine(float duration, float rate)
+	{
+		var oldViewRadius = _viewRadius;
+		var oldViewAngle = _viewAngle;
+
+		_viewAngle *= Mathf.Abs(1 - rate);
+		_viewRadius *= Mathf.Abs(1 - rate);
+
+		var tick = duration / 100f;
+		var oldViewRadiusPerTick = (oldViewRadius - _viewRadius) / 100f;
+		var oldViewAnglePerTick = (oldViewAngle - _viewAngle) / 100f;
+
+		while (_viewAngle < oldViewAngle && _viewRadius < oldViewRadius)
+		{
+			_viewAngle += oldViewAnglePerTick;
+			_viewRadius += oldViewRadiusPerTick;
+			yield return new WaitForSeconds(tick);
+		}
+	}
+	
 	private IEnumerator FindTargetsWithDelay(float delay) 
 	{
 		while (true) 

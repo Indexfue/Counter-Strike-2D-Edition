@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Interfaces;
 using UnityEngine;
+using Utilities.Grenades;
 using Weapons;
 
 namespace Player
@@ -17,21 +18,22 @@ namespace Player
             {
                 [InventoryItemType.Primary] = GetComponentInChildren<PrimaryWeapon>(),
                 [InventoryItemType.Secondary] = GetComponentInChildren<SecondaryWeapon>(),
-                [InventoryItemType.Melee] = GetComponentInChildren<MeleeWeapon>()
+                [InventoryItemType.Melee] = GetComponentInChildren<MeleeWeapon>(),
+                [InventoryItemType.Grenade] = GetComponentInChildren<GrenadeInventoryItems>()
             };
         } 
 
         private void OnEnable()
         {
-            EventManager.Subscribe<WeaponSelectKeyPressedEventArgs>(ChangeCurrentItem);
+            EventManager.Subscribe<ItemSelectKeyPressedEventArgs>(ChangeCurrentItem);
         }
 
         private void OnDisable()
         {
-            EventManager.Unsubscribe<WeaponSelectKeyPressedEventArgs>(ChangeCurrentItem);
+            EventManager.Unsubscribe<ItemSelectKeyPressedEventArgs>(ChangeCurrentItem);
         }
         
-        private void ChangeCurrentItem(WeaponSelectKeyPressedEventArgs args)
+        private void ChangeCurrentItem(ItemSelectKeyPressedEventArgs args)
         {
             InventoryItemType inventoryItemType = (InventoryItemType)args.KeyCode;
             ChangeCurrentItem(inventoryItemType);
@@ -88,5 +90,6 @@ namespace Player
         Primary = 1,
         Secondary = 2,
         Melee = 3,
+        Grenade = 4
     }
 }

@@ -29,6 +29,9 @@ public sealed class InputHandler : MonoBehaviour
         _inputSettings.Player.Fire.performed += OnFireKeyPressed;
         _inputSettings.Player.Fire.canceled += OnFireKeyUnpressed;
 
+        _inputSettings.Player.SecondaryFire.performed += OnSecondaryFireKeyPressed;
+        _inputSettings.Player.SecondaryFire.canceled += OnSecondaryFireKeyUnpressed;
+
         _inputSettings.Player.Reload.started += OnReloadKeyPressed;
 
         _inputSettings.Player.Inventory.started += OnWeaponPickKeyPressed;
@@ -38,6 +41,16 @@ public sealed class InputHandler : MonoBehaviour
     {
         Vector3 movementDirection = callbackContext.ReadValue<Vector3>();
         EventManager.RaiseEvent(new MovementKeyPressedEventArgs(movementDirection));
+    }
+
+    private void OnSecondaryFireKeyPressed(InputAction.CallbackContext callbackContext)
+    {
+        EventManager.RaiseEvent(new SecondaryFireKeyPressedEventArgs());
+    }
+
+    private void OnSecondaryFireKeyUnpressed(InputAction.CallbackContext callbackContext)
+    {
+        EventManager.RaiseEvent(new SecondaryFireKeyUnpressedEventArgs());
     }
 
     private void OnFireKeyPressed(InputAction.CallbackContext callbackContext)
@@ -58,7 +71,6 @@ public sealed class InputHandler : MonoBehaviour
     private void OnWeaponPickKeyPressed(InputAction.CallbackContext callbackContext)
     {
         float keyPressed = callbackContext.ReadValue<float>();
-        EventManager.RaiseEvent(new WeaponSelectKeyPressedEventArgs(keyPressed));
-        WeaponPickKeyPressed?.Invoke(keyPressed);
+        EventManager.RaiseEvent(new ItemSelectKeyPressedEventArgs(keyPressed));
     }
 }
