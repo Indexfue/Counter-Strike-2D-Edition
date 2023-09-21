@@ -46,7 +46,7 @@ namespace Utilities.Grenades
                     if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, _obstacleMask))
                     {
                         var flashRate = GetFlashRateByTargetRotation(target.gameObject.transform);
-                        var flashTime = GetFlashTimeByTargetDistance(target.gameObject.transform);
+                        var flashTime = GetFlashTimeByTargetRotation(target.gameObject.transform);
                         flashedTargets.Add(new FlashedTarget(target.gameObject, flashTime, flashRate));
                     }
                 }
@@ -68,23 +68,24 @@ namespace Utilities.Grenades
             }
         }
 
-        private float GetFlashTimeByTargetDistance(Transform target)
+        private float GetFlashTimeByTargetRotation(Transform target)
         {
-            //TODO: Make this
-            float targetDistance = Vector3.Distance(target.position, transform.position);
-            return _baseFlashTime;
+            return _baseFlashTime * GetFlashRateByTargetRotation(target);
         }
 
         private float GetFlashRateByTargetRotation(Transform target)
+        {
+            return 1 - (GetAngle(target) / 180f);
+        }
+
+        private float GetAngle(Transform target)
         {
             Ray ray = new Ray(transform.position, target.position - transform.position);
 
             float targetAngle = Vector3.Angle(target.TransformDirection(Vector3.forward), ray.direction);
             targetAngle = Mathf.Abs(targetAngle - 180);
-            return 1 - (targetAngle / 180f);
+            return targetAngle;
         }
-        
-        
     }
 
     public struct FlashedTarget
