@@ -39,7 +39,7 @@ namespace Utilities.Grenades
                 foreach (var target in targetsInFlashRadius)
                 {
                     if (target == null) break;
-                    
+
                     Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
                     float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
 
@@ -47,7 +47,7 @@ namespace Utilities.Grenades
                     {
                         var flashRate = GetFlashRateByTargetRotation(target.gameObject.transform);
                         var flashTime = GetFlashTimeByTargetDistance(target.gameObject.transform);
-                        flashedTargets.Add(new FlashedTarget(target.gameObject, flashRate, flashTime));
+                        flashedTargets.Add(new FlashedTarget(target.gameObject, flashTime, flashRate));
                     }
                 }
             }
@@ -70,21 +70,18 @@ namespace Utilities.Grenades
 
         private float GetFlashTimeByTargetDistance(Transform target)
         {
+            //TODO: Make this
             float targetDistance = Vector3.Distance(target.position, transform.position);
-            return 1;
+            return _baseFlashTime;
         }
 
         private float GetFlashRateByTargetRotation(Transform target)
         {
-            Ray ray = new Ray(transform.position, target.position);
-            if (!Physics.Raycast(ray, 50f, _obstacleMask))
-            {
-                float targetAngle = Vector3.Angle(target.TransformDirection(target.forward), ray.direction);
+            Ray ray = new Ray(transform.position, target.position - transform.position);
 
-                targetAngle = Mathf.Abs(targetAngle - 180);
-                return 1 - (targetAngle / 180f);
-            }
-            return 0;
+            float targetAngle = Vector3.Angle(target.TransformDirection(Vector3.forward), ray.direction);
+            targetAngle = Mathf.Abs(targetAngle - 180);
+            return 1 - (targetAngle / 180f);
         }
         
         
