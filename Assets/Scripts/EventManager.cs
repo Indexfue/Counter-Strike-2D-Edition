@@ -10,7 +10,6 @@ namespace Player
 
         public static void Subscribe<T>(Action<T> handler) where T : EventArgs
         {
-            Debug.Log("Subscribed");
             Type eventType = typeof(T);
             if (!_eventSubscribers.ContainsKey(eventType))
             {
@@ -22,7 +21,6 @@ namespace Player
 
         public static void Unsubscribe<T>(Action<T> handler) where T : EventArgs
         {
-            Debug.Log("Unsubscribed");
             Type eventType = typeof(T);
             if (_eventSubscribers.ContainsKey(eventType))
             {

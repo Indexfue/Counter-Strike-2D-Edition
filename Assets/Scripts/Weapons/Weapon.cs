@@ -27,32 +27,19 @@ namespace Weapons
             InitializeShootingLogic();
         }
 
-        private void OnEnable()
-        {
-            EventManager.Subscribe<FireKeyPressedEventArgs>(OnFireKeyPressed);
-            EventManager.Subscribe<ReloadKeyPressedEventArgs>(OnReloadKeyPressed);
-            EventManager.Subscribe<FireKeyUnpressedEventArgs>(OnFireKeyUnpressed);
-        }
-
-        private void OnDisable()
-        {
-            EventManager.Unsubscribe<FireKeyPressedEventArgs>(OnFireKeyPressed);
-            EventManager.Unsubscribe<ReloadKeyPressedEventArgs>(OnReloadKeyPressed);
-            EventManager.Unsubscribe<FireKeyUnpressedEventArgs>(OnFireKeyUnpressed);
-        }
-        private void OnFireKeyPressed(FireKeyPressedEventArgs args)
+        protected void OnFireKeyPressed(FireKeyPressedEventArgs args)
         {
             if (gameObject.activeSelf)
                 StartRoutineAsVariable(AttackingRoutine(), ref _attackingRoutine);
         } 
         
-        private void OnReloadKeyPressed(ReloadKeyPressedEventArgs args)
+        protected void OnReloadKeyPressed(ReloadKeyPressedEventArgs args)
         {
             if (gameObject.activeSelf)
                 StartRoutineAsVariable(ReloadRoutine(), ref _reloadingRoutine);
         }
 
-        private void OnFireKeyUnpressed(FireKeyUnpressedEventArgs args)
+        protected void OnFireKeyUnpressed(FireKeyUnpressedEventArgs args)
         {
             if (gameObject.activeSelf)
             {
@@ -79,8 +66,12 @@ namespace Weapons
         private void PerformAttack()
         {
             _shootingLogic.Shoot(Settings.ShootPoint, Settings, _continiousShotCount);
-            _currentCapacity -= 1;
-            _continiousShotCount = Mathf.Clamp(_continiousShotCount + 1, 0, Settings.MaxCapacity);
+
+            if (Settings.WeaponType != WeaponType.Melee)
+            {
+                _currentCapacity -= 1;
+                _continiousShotCount = Mathf.Clamp(_continiousShotCount + 1, 0, Settings.MaxCapacity);
+            }
         }
         
         private bool TryAttack()
@@ -121,8 +112,10 @@ namespace Weapons
                 StopRoutineAsVariable(ref _coolingRoutine);
 
             if (!Settings.CanClampShooting && IsShootingDelayed())
+            {
                 TryAttack();
-            
+            }
+
             if (Settings.CanClampShooting)
             {
                 while (!IsShootingDelayed())
@@ -130,7 +123,7 @@ namespace Weapons
                 
                 while (true)
                 {
-                    if (TryAttack() == false) 
+                    if (!TryAttack()) 
                         break;
                     yield return new WaitForSeconds(Settings.ShotsPerSecond);
                 }

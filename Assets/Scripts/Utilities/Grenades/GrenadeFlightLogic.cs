@@ -41,7 +41,7 @@ namespace Utilities.Grenades
             }
         }
 
-        private void SetSpeedByObstacleRicochet() => _currentFlySpeed /= _ricochetFlySpeedReduceRate;
+        private void SetSpeedByObstacleRicochet() => _currentFlySpeed *= _ricochetFlySpeedReduceRate;
 
         private IEnumerator SetSpeedByTime()
         {
