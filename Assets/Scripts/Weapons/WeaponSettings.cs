@@ -21,7 +21,7 @@ namespace Weapons
         [SerializeField] private int _damage;
         [SerializeField, Range(0, Mathf.Infinity)] private float _shootDistance;
         [SerializeField] private float _shootDelay;
-        [SerializeField] private Ticker _ticker;
+        [SerializeField] private float _shotsPerSecond;
         [SerializeField] private bool _canClampShooting;
         [SerializeField] private WeaponBallistics _weaponBallistics;
         
@@ -43,7 +43,7 @@ namespace Weapons
         public int Damage => _damage;
         public float ShootDistance => _shootDistance;
         public float ShootDelay => _shootDelay;
-        public Ticker Ticker => _ticker;
+        public float ShotsPerSecond => 1f / _shotsPerSecond;
         public bool CanClampShooting => _canClampShooting;
         public WeaponBallistics WeaponBallistics => _weaponBallistics;
 

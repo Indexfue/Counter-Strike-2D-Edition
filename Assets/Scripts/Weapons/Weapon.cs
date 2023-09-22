@@ -120,7 +120,7 @@ namespace Weapons
             if (_coolingRoutine != null)
                 StopRoutineAsVariable(ref _coolingRoutine);
 
-            if (!Settings.CanClampShooting && !IsShootingDelayed())
+            if (!Settings.CanClampShooting && IsShootingDelayed())
                 TryAttack();
             
             if (Settings.CanClampShooting)
@@ -132,7 +132,7 @@ namespace Weapons
                 {
                     if (TryAttack() == false) 
                         break;
-                    yield return new WaitForSeconds(Settings.Ticker.TickPerSecond);
+                    yield return new WaitForSeconds(Settings.ShotsPerSecond);
                 }
             }
         }

@@ -15,6 +15,11 @@ namespace Utilities.Grenades
         {
             _flightLogic.Fly(flightMode, thrower);
         }
+        
+        public void Initialize()
+        {
+            StartCoroutine(Explode());
+        }
 
         protected override IEnumerator Explode()
         {
@@ -22,11 +27,6 @@ namespace Utilities.Grenades
             List<FlashedTarget> flashedTargetsList = GetTargetsInFlashRadius();
             FlashTargets(flashedTargetsList);
             Destroy(gameObject);
-        }
-        
-        private void Start()
-        {
-            StartCoroutine(Explode());
         }
 
         private List<FlashedTarget> GetTargetsInFlashRadius()

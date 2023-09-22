@@ -9,12 +9,12 @@ namespace Player
 {
     public class PlayerInventory : MonoBehaviour
     {
-        [SerializeField] private InventoryDictionary _inventoryItems;
+        [SerializeField] private SerializableDictionary<InventoryItemType, IInventoryItem> _inventoryItems;
         private IInventoryItem _currentInventoryItem;
 
         private void Start()
         {
-            _inventoryItems = new InventoryDictionary()
+            _inventoryItems = new SerializableDictionary<InventoryItemType, IInventoryItem>()
             {
                 [InventoryItemType.Primary] = GetComponentInChildren<PrimaryWeapon>(),
                 [InventoryItemType.Secondary] = GetComponentInChildren<SecondaryWeapon>(),
