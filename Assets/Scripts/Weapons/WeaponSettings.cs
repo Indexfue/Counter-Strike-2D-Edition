@@ -32,6 +32,7 @@ namespace Weapons
         [Header("Layer Mask")]
         [SerializeField] private LayerMask _targetMask;
         [SerializeField] private LayerMask _obstacleMask;
+        [SerializeField] private LayerMask _ignoreMask;
 
         public int MaxCapacity => _maxCapacity;
         public float ReloadDuration => _reloadDuration;
@@ -52,6 +53,7 @@ namespace Weapons
 
         public LayerMask TargetMask => _targetMask;
         public LayerMask ObstacleMask => _obstacleMask;
+        public LayerMask IgnoreMask => _ignoreMask;
 
         public void Initialize(GameObject prefab, Transform shootPoint)
         {

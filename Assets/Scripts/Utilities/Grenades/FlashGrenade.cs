@@ -11,22 +11,15 @@ namespace Utilities.Grenades
         [SerializeField] private float _baseFlashTime;
         [SerializeField] private float _flashRadius;
 
-        public override void Use(GrenadeFlightMode flightMode, Transform thrower)
-        {
-            _flightLogic.Fly(flightMode, thrower);
-        }
-        
         public void Initialize()
         {
-            StartCoroutine(Explode());
+            StartCoroutine(ExplodeRoutine());
         }
 
-        protected override IEnumerator Explode()
+        protected override void Explode()
         {
-            yield return new WaitForSeconds(_explosionTime);
             List<FlashedTarget> flashedTargetsList = GetTargetsInFlashRadius();
             FlashTargets(flashedTargetsList);
-            Destroy(gameObject);
         }
 
         private List<FlashedTarget> GetTargetsInFlashRadius()

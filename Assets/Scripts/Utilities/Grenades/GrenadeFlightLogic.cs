@@ -35,13 +35,13 @@ namespace Utilities.Grenades
         {
             if (!TryGetComponent<HealthComponent>(out HealthComponent health))
             {
-                GetNextFlyTrajectory(other.collider.gameObject.layer);
+                Vector3 direction = GetNextFlyTrajectory(other.collider.gameObject.layer);
                 SetSpeedByObstacleRicochet();
-                AddForce(_rigidbody.velocity * _currentFlySpeed, ForceMode.Impulse);
+                AddForce(direction * _currentFlySpeed, ForceMode.Impulse);
             }
         }
 
-        private void SetSpeedByObstacleRicochet() => _currentFlySpeed *= _ricochetFlySpeedReduceRate;
+        private void SetSpeedByObstacleRicochet() => _currentFlySpeed *= (1 - _ricochetFlySpeedReduceRate);
 
         private IEnumerator SetSpeedByTime()
         {

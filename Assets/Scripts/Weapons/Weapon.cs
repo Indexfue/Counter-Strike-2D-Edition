@@ -2,6 +2,7 @@
 using System.Collections;
 using Interfaces;
 using Player;
+using UnityEditor;
 using Weapons.Shooting;
 using UnityEngine;
 
@@ -174,7 +175,7 @@ namespace Weapons
             Vector3 direction = transform.TransformDirection(Vector3.forward) * 50f;
             RaycastHit hit;
 
-            if (Physics.Raycast(transform.position, direction, out hit, 50f))
+            if (Physics.Raycast(transform.position, direction, out hit, Settings.ObstacleMask))
             {
                 Gizmos.DrawLine(transform.position, hit.point);
             }

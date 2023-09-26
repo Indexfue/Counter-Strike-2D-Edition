@@ -14,7 +14,18 @@ namespace Utilities.Grenades
         
         [SerializeField] protected GrenadeFlightLogic _flightLogic;
 
-        protected abstract IEnumerator Explode();
-        public abstract void Use(GrenadeFlightMode flightMode, Transform thrower);
+        protected virtual IEnumerator ExplodeRoutine()
+        {
+            yield return new WaitForSeconds(_explosionTime);
+            Explode();
+            Destroy(gameObject);
+        }
+
+        protected abstract void Explode();
+
+        public virtual void Use(GrenadeFlightMode flightMode, Transform thrower)
+        {
+            _flightLogic.Fly(flightMode, thrower);
+        }
     }
 }

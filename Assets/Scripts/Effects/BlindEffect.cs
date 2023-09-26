@@ -3,22 +3,16 @@ using UnityEngine;
 
 namespace Player.Effects
 {
+    [RequireComponent(typeof(FieldOfView))]
     public class BlindEffect : Effect
     {
-        private FieldOfView _targetFOV;
-
         private float _blindRate = 1f;
         private float _blindTime = 3f;
+        private bool _isInfinityBlind = false;
         
-        private void Start()
-        {
-            if (TryGetComponent<FieldOfView>(out _targetFOV))
-            {
-                PerformEffect();
-            }
-        }
+        private FieldOfView _targetFOV;
 
-        protected override IEnumerator PerformEffectRoutine()
+        private IEnumerator PerformEffectRoutine()
         {
             var oldViewRadius = _targetFOV.ViewRadius;
             var oldViewAngle = _targetFOV.ViewAngle;
@@ -32,6 +26,9 @@ namespace Player.Effects
 
             while (_targetFOV.ViewAngle < oldViewAngle && _targetFOV.ViewRadius < oldViewRadius)
             {
+                while (_isInfinityBlind)
+                    yield return new WaitForEndOfFrame();
+                
                 _targetFOV.ViewAngle += oldViewAnglePerTick;
                 _targetFOV.ViewRadius += oldViewRadiusPerTick;
                 yield return new WaitForSeconds(tick);
@@ -42,10 +39,12 @@ namespace Player.Effects
 
         protected override void PerformEffect() => StartCoroutine(PerformEffectRoutine());
 
-        public void Initialize(float blindRate, float blindTime)
+        public void Initialize(float blindRate, float blindTime, bool isInfinityBlind = false)
         {
             _blindRate = blindRate;
             _blindTime = blindTime;
+            _isInfinityBlind = isInfinityBlind;
+            PerformEffect();
         }
     }
 }
