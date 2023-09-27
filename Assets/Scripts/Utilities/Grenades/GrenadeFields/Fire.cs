@@ -57,7 +57,19 @@ namespace Utilities.Grenades.GrenadeFields
 #if UNITY_EDITOR
         private void OnDrawGizmosSelected()
         {
-            
+            if (TryGetComponent<Collider>(out Collider collider))
+            {
+                Gizmos.DrawCube(collider.bounds.center, collider.bounds.size);
+            }
+
+            if (_targetsInFire.Count > 0)
+            {
+                Gizmos.color = Color.red;
+            }
+            else
+            {
+                Gizmos.color = Color.green;
+            }
         }
 #endif
     }

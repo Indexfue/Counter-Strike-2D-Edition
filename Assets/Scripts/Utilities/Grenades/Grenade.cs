@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections;
+using System.ComponentModel;
+using UnityEditor;
 using UnityEngine;
 
 namespace Utilities.Grenades
@@ -13,6 +15,11 @@ namespace Utilities.Grenades
         [SerializeField] protected LayerMask _obstacleMask;
         
         [SerializeField] protected GrenadeFlightLogic _flightLogic;
+
+        private void Start()
+        {
+            StartCoroutine(ExplodeRoutine());
+        }
 
         protected virtual IEnumerator ExplodeRoutine()
         {

@@ -23,12 +23,12 @@ namespace Utilities.Grenades
             _grenades = new SerializableDictionary<GrenadeType, GrenadeInventoryItem>()
             {
                 [GrenadeType.Flash] = new GrenadeInventoryItem(Resources.Load("Utilities/Grenades/Flashbang Grenade").GameObject(), 2),
-                [GrenadeType.Explosion] = new GrenadeInventoryItem(),
-                [GrenadeType.Smoke] = new GrenadeInventoryItem(),
-                [GrenadeType.Fire] = new GrenadeInventoryItem()
+                [GrenadeType.Explosion] = new GrenadeInventoryItem(Resources.Load("Utilities/Grenades/Explosion Grenade").GameObject(), 1),
+                [GrenadeType.Smoke] = new GrenadeInventoryItem(Resources.Load("Utilities/Grenades/Smoke Grenade").GameObject(), 1),
+                [GrenadeType.Fire] = new GrenadeInventoryItem(Resources.Load("Utilities/Grenades/Fire Grenade").GameObject(), 1)
             };
 
-            _currentSelectedGrenade = _grenades[GrenadeType.Flash];
+            _currentSelectedGrenade = _grenades[GrenadeType.Smoke];
         }
 
         private void OnEnable()

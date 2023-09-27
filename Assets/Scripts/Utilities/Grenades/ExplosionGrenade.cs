@@ -54,16 +54,6 @@ namespace Utilities.Grenades
         {
             Gizmos.color = Color.green;
             Gizmos.DrawSphere(transform.position, _explodeRadius);
-
-            if (explodedObjects.Count > 0)
-            {
-                Gizmos.color = Color.red;
-
-                foreach (var obj in explodedObjects)
-                {
-                    Gizmos.DrawLine(transform.position, obj.transform.position);
-                }
-            }
         }
 #endif
     }
