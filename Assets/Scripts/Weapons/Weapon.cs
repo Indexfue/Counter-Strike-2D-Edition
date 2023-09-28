@@ -72,6 +72,7 @@ namespace Weapons
             {
                 _currentCapacity -= 1;
                 _continiousShotCount = Mathf.Clamp(_continiousShotCount + 1, 0, Settings.MaxCapacity);
+                _lastShotTime = Time.time;
             }
         }
         
