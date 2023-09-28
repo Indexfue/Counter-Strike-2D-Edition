@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace Player.Effects
+﻿namespace Player.Effects
 {
     public class ExplosionEffect : Effect
     {

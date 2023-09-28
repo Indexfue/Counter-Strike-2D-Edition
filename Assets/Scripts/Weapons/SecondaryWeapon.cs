@@ -4,7 +4,6 @@ namespace Weapons
 {
     public sealed class SecondaryWeapon : Weapon
     {
-        //TODO: Fix double shot bug
         private void OnEnable()
         {
             EventManager.Subscribe<FireKeyPressedEventArgs>(OnFireKeyPressed);

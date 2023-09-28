@@ -39,7 +39,6 @@ namespace Utilities.Grenades
 
                     if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, _obstacleMask))
                     {
-                        var flashRate = GetFlashRateByTargetRotation(target.gameObject.transform);
                         var flashTime = GetFlashTimeByTargetRotation(target.gameObject.transform);
                         flashedTargets.Add(new FlashedTarget(target.gameObject, flashTime));
                     }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.ComponentModel;
-using UnityEditor;
+﻿using System.Collections;
 using UnityEngine;
 
 namespace Utilities.Grenades
@@ -21,7 +18,7 @@ namespace Utilities.Grenades
             StartCoroutine(ExplodeRoutine());
         }
 
-        protected virtual IEnumerator ExplodeRoutine()
+        protected IEnumerator ExplodeRoutine()
         {
             yield return new WaitForSeconds(_explosionTime);
             Explode();

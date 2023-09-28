@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Interfaces;
 using Player;
-using UnityEditor;
 using Weapons.Shooting;
 using UnityEngine;
 

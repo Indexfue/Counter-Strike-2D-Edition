@@ -56,9 +56,7 @@ namespace Utilities.Grenades
             if (!gameObject.activeSelf)
                 return;
             
-            if (_leftClicked && _rightClicked)
-                UseSelectedGrenade(GrenadeFlightMode.Medium);
-            else if (_leftClicked)
+            if (_leftClicked)
                 UseSelectedGrenade(GrenadeFlightMode.Hard);
             else if (_rightClicked)
                 UseSelectedGrenade(GrenadeFlightMode.Light);
