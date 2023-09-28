@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Player.Effects;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -14,8 +15,8 @@ namespace Utilities.Grenades.GrenadeFields
         [SerializeField] private ParticleSystem _particles;
 
         [SerializeField] private float _blindRate;
-        
-        private List<BlindEffect> _targetsInSmoke;
+
+        private readonly HashSet<Collider> _targetsInSmoke = new HashSet<Collider>();
 
         private void Start()
         {
@@ -25,30 +26,36 @@ namespace Utilities.Grenades.GrenadeFields
         private IEnumerator LifeRoutine()
         {
             yield return new WaitForSeconds(_duration);
+            Die();
+        }
+
+        private void Die()
+        {
+            foreach (var target in _targetsInSmoke)
+            {
+                target.gameObject.RemoveComponent<BlindEffect>();
+            }
+            
             Destroy(gameObject);
         }
 
         private void OnTriggerStay(Collider other)
         {
-            if (other.TryGetComponent<BlindEffect>(out BlindEffect effect))
-            {
-                if (_targetsInSmoke.Exists(e => e.Equals(effect)))
-                    return;
-            }
-            
             if (other.TryGetComponent<FieldOfView>(out FieldOfView fov))
             {
-                BlindEffect target = fov.AddComponent<BlindEffect>();
-                target.Initialize(_blindRate, 0f, true);
-                _targetsInSmoke.Add(target);
+                if (!_targetsInSmoke.Contains(other))
+                {
+                    fov.AddComponent<BlindEffect>().Initialize();
+                    _targetsInSmoke.Add(other);
+                }
             }
         }
 
         private void OnTriggerExit(Collider other)
         {
-            if (other.TryGetComponent<BlindEffect>(out BlindEffect effect))
+            if (_targetsInSmoke.Contains(other))
             {
-                _targetsInSmoke.Remove(effect);
+                _targetsInSmoke.Remove(other);
                 other.gameObject.RemoveComponent<BlindEffect>();
             }
         }

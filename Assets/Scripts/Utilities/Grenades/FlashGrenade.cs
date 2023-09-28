@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Effects;
 using Player.Effects;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -18,14 +19,14 @@ namespace Utilities.Grenades
 
         protected override void Explode()
         {
-            List<FlashedTarget> flashedTargetsList = GetTargetsInFlashRadius();
+            HashSet<FlashedTarget> flashedTargetsList = GetTargetsInFlashRadius();
             FlashTargets(flashedTargetsList);
         }
 
-        private List<FlashedTarget> GetTargetsInFlashRadius()
+        private HashSet<FlashedTarget> GetTargetsInFlashRadius()
         {
             Collider[] targetsInFlashRadius = new Collider[32];
-            List<FlashedTarget> flashedTargets = new List<FlashedTarget>();
+            HashSet<FlashedTarget> flashedTargets = new HashSet<FlashedTarget>();
 
             if (Physics.OverlapSphereNonAlloc(transform.position, _flashRadius, targetsInFlashRadius, _targetMask) > 0)
             {
@@ -40,7 +41,7 @@ namespace Utilities.Grenades
                     {
                         var flashRate = GetFlashRateByTargetRotation(target.gameObject.transform);
                         var flashTime = GetFlashTimeByTargetRotation(target.gameObject.transform);
-                        flashedTargets.Add(new FlashedTarget(target.gameObject, flashTime, flashRate));
+                        flashedTargets.Add(new FlashedTarget(target.gameObject, flashTime));
                     }
                 }
             }
@@ -48,7 +49,7 @@ namespace Utilities.Grenades
             return flashedTargets;
         }
 
-        private void FlashTargets(List<FlashedTarget> flashedTargets)
+        private void FlashTargets(HashSet<FlashedTarget> flashedTargets)
         {
             if (flashedTargets.Count == 0) return;
             
@@ -56,7 +57,7 @@ namespace Utilities.Grenades
             {
                 if (target.Target.TryGetComponent<FieldOfView>(out FieldOfView fov))
                 {
-                    fov.AddComponent<BlindEffect>().Initialize(target.FlashRate, target.FlashTime);
+                    fov.AddComponent<FlashEffect>().Initialize(target.FlashTime);
                 }
             }
         }
@@ -85,13 +86,11 @@ namespace Utilities.Grenades
     {
         public GameObject Target { get; }
         public float FlashTime { get; }
-        public float FlashRate { get; }
 
-        public FlashedTarget(GameObject target, float flashTime, float flashRate)
+        public FlashedTarget(GameObject target, float flashTime)
         {
             Target = target;
             FlashTime = flashTime;
-            FlashRate = flashRate;
         }
     }
 }

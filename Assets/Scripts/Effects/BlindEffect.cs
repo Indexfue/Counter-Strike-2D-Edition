@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace Player.Effects
@@ -6,44 +7,33 @@ namespace Player.Effects
     [RequireComponent(typeof(FieldOfView))]
     public class BlindEffect : Effect
     {
-        private float _blindRate = 1f;
-        private float _blindTime = 3f;
-        private bool _isInfinityBlind = false;
-        
+        private float _blindRate;
+        private float _oldViewRadius;
         private FieldOfView _targetFOV;
 
         private IEnumerator PerformEffectRoutine()
         {
-            var oldViewRadius = _targetFOV.ViewRadius;
-            var oldViewAngle = _targetFOV.ViewAngle;
+            float newViewRadius = _targetFOV.ViewRadius * Mathf.Abs(1 - _blindRate);
 
-            _targetFOV.ViewAngle *= Mathf.Abs(1 - _blindRate);
-            _targetFOV.ViewRadius *= Mathf.Abs(1 - _blindRate);
-
-            var tick = _blindTime / 100f;
-            var oldViewRadiusPerTick = (oldViewRadius - _targetFOV.ViewRadius) / 100f;
-            var oldViewAnglePerTick = (oldViewAngle - _targetFOV.ViewAngle) / 100f;
-
-            while (_targetFOV.ViewAngle < oldViewAngle && _targetFOV.ViewRadius < oldViewRadius)
+            while (true)
             {
-                while (_isInfinityBlind)
-                    yield return new WaitForEndOfFrame();
-                
-                _targetFOV.ViewAngle += oldViewAnglePerTick;
-                _targetFOV.ViewRadius += oldViewRadiusPerTick;
-                yield return new WaitForSeconds(tick);
+                _targetFOV.ViewRadius = newViewRadius;
+                yield return new WaitForEndOfFrame();
             }
-            
-            Destroy(this);
+        }
+
+        private void OnDestroy()
+        {
+            _targetFOV.ViewRadius = _oldViewRadius;
         }
 
         protected override void PerformEffect() => StartCoroutine(PerformEffectRoutine());
 
-        public void Initialize(float blindRate, float blindTime, bool isInfinityBlind = false)
+        public void Initialize(float blindRate = 1)
         {
+            _targetFOV = GetComponent<FieldOfView>();
+            _oldViewRadius = _targetFOV.ViewRadius;
             _blindRate = blindRate;
-            _blindTime = blindTime;
-            _isInfinityBlind = isInfinityBlind;
             PerformEffect();
         }
     }

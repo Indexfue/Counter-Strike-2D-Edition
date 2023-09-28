@@ -16,7 +16,7 @@ namespace Utilities.Grenades.GrenadeFields
         [SerializeField] private int _damage;
         [SerializeField] private float _tick;
 
-        private List<FireEffect> _targetsInFire;
+        private readonly List<FireEffect> _targetsInFire = new List<FireEffect>();
         
         private void Start()
         {
@@ -26,6 +26,16 @@ namespace Utilities.Grenades.GrenadeFields
         private IEnumerator LifeRoutine()
         {
             yield return new WaitForSeconds(_duration);
+            Die();
+        }
+
+        private void Die()
+        {
+            foreach (var target in _targetsInFire)
+            {
+                Destroy(target);
+            }
+            
             Destroy(gameObject);
         }
 
@@ -33,7 +43,7 @@ namespace Utilities.Grenades.GrenadeFields
         {
             if (other.TryGetComponent<FireEffect>(out FireEffect effect))
             {
-                if (_targetsInFire.Exists(e => e.Equals(effect)))
+                if (_targetsInFire.Contains(effect))
                     return;
             }
             
@@ -50,7 +60,7 @@ namespace Utilities.Grenades.GrenadeFields
             if (other.TryGetComponent<FireEffect>(out FireEffect effect))
             {
                 _targetsInFire.Remove(effect);
-                other.gameObject.RemoveComponent<BlindEffect>();
+                Destroy(effect);
             }
         }
 

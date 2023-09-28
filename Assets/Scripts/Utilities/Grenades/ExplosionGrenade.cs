@@ -33,6 +33,8 @@ namespace Utilities.Grenades
             {
                 foreach (var obj in overlappedObjects)
                 {
+                    if (obj == null) break;
+                    
                     Vector3 directionToTarget = (obj.transform.position - transform.position).normalized;
                     
                     if (!Physics.Raycast(transform.position, directionToTarget, _obstacleMask))
@@ -54,6 +56,11 @@ namespace Utilities.Grenades
         {
             Gizmos.color = Color.green;
             Gizmos.DrawSphere(transform.position, _explodeRadius);
+
+            if (Physics.OverlapSphere(transform.position, _explodeRadius, _targetMask).Length > 0)
+            {
+                Gizmos.color = Color.red;
+            }
         }
 #endif
     }
