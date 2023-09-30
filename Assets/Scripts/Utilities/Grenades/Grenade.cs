@@ -12,6 +12,8 @@ namespace Utilities.Grenades
         [SerializeField] protected LayerMask _obstacleMask;
         
         [SerializeField] protected GrenadeFlightLogic _flightLogic;
+        
+        public GrenadeType GrenadeType => _grenadeType;
 
         private void Start()
         {

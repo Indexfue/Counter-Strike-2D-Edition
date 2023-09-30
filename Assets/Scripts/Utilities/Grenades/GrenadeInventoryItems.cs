@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Interfaces;
 using Player;
 using Unity.VisualScripting;
@@ -22,13 +23,14 @@ namespace Utilities.Grenades
         {
             _grenades = new SerializableDictionary<GrenadeType, GrenadeInventoryItem>()
             {
-                [GrenadeType.Flash] = new GrenadeInventoryItem(Resources.Load("Utilities/Grenades/Flashbang Grenade").GameObject(), 2),
-                [GrenadeType.Explosion] = new GrenadeInventoryItem(Resources.Load("Utilities/Grenades/Explosion Grenade").GameObject(), 1),
-                [GrenadeType.Smoke] = new GrenadeInventoryItem(Resources.Load("Utilities/Grenades/Smoke Grenade").GameObject(), 1),
-                [GrenadeType.Fire] = new GrenadeInventoryItem(Resources.Load("Utilities/Grenades/Fire Grenade").GameObject(), 1)
+                [GrenadeType.Flash] = new(Resources.Load("Utilities/Grenades/Flashbang Grenade").GameObject(), GrenadeType.Flash, 2),
+                [GrenadeType.Explosion] = new(Resources.Load("Utilities/Grenades/Explosion Grenade").GameObject(), GrenadeType.Explosion, 1),
+                [GrenadeType.Smoke] = new(Resources.Load("Utilities/Grenades/Smoke Grenade").GameObject(), GrenadeType.Smoke, 1),
+                [GrenadeType.Fire] = new(Resources.Load("Utilities/Grenades/Fire Grenade").GameObject(), GrenadeType.Fire, 1)
             };
 
-            _currentSelectedGrenade = _grenades[GrenadeType.Smoke];
+            _currentSelectedGrenade = _grenades[GrenadeType.Flash];
+            SwitchGrenade();
         }
 
         private void OnEnable()
@@ -70,13 +72,52 @@ namespace Utilities.Grenades
             _currentSelectedGrenade.Use(_throwPosition, flightMode);
         }
 
+        private void SwitchGrenade()
+        {
+            _grenades[_currentSelectedGrenade.GrenadeType] = _currentSelectedGrenade;
+            _currentSelectedGrenade = SetNextGrenade(_currentSelectedGrenade);
+        }
+
+        private GrenadeInventoryItem SetNextGrenade(GrenadeInventoryItem currentSelectedGrenade)
+        {
+            //TODO: CurrentCapacity = 0
+            int currentGrenadeIndex = GetCurrentGrenadeIndex();
+
+            for (int i = currentGrenadeIndex + 1; i <= currentGrenadeIndex + _grenades.Keys.Count; i++)
+            {
+                GrenadeInventoryItem nextGrenade = _grenades.Values.ElementAt(i % _grenades.Keys.Count);
+
+                if (currentSelectedGrenade.GrenadeType == nextGrenade.GrenadeType || nextGrenade.CurrentCapacity == 0)
+                {
+                    continue;
+                }
+
+                return nextGrenade;
+            }
+
+            throw new Exception("Can't find item");
+        }
+
+        private int GetCurrentGrenadeIndex()
+        {
+            for (int i = 0; i < _grenades.Keys.Count; i++)
+            {
+                if (_currentSelectedGrenade.Prefab == _grenades.Values.ElementAt(i).Prefab)
+                {
+                    return i;
+                }
+            }
+
+            throw new ArgumentOutOfRangeException("Index not found");
+        }
+
         public void Select()
         {
-            if (gameObject.activeSelf)
+            if (gameObject.activeInHierarchy)
             {
-                //_currentSelectedGrenade
+                SwitchGrenade();
             }
-            
+            SwitchGrenade();
             gameObject.SetActive(true);
         }
 

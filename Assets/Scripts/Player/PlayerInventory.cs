@@ -1,4 +1,6 @@
-﻿using Interfaces;
+﻿using System;
+using Interfaces;
+using UnityEditor;
 using UnityEngine;
 using Utilities.Grenades;
 using Weapons;
@@ -19,6 +21,9 @@ namespace Player
                 [InventoryItemType.Melee] = GetComponentInChildren<MeleeWeapon>(),
                 [InventoryItemType.Grenade] = GetComponentInChildren<GrenadeInventoryItems>()
             };
+
+            DeselectAll();
+            SetStartWeapon();
         } 
 
         private void OnEnable()
@@ -30,12 +35,41 @@ namespace Player
         {
             EventManager.Unsubscribe<ItemSelectKeyPressedEventArgs>(ChangeCurrentItem);
         }
+
+        private void SetStartWeapon()
+        {
+            foreach (var inventoryItem in _inventoryItems.Values)
+            {
+                if (inventoryItem is Weapon weapon)
+                {
+                    if (weapon.Settings != null)
+                    {
+                        inventoryItem.Select();
+                        return;
+                    }
+                }
+                else
+                {
+                    throw new Exception("Need to add at least 1 weapon settings (Primary/Secondary/Melee)");
+                }
+            }
+        }
+
+        private void DeselectAll()
+        {
+            foreach (var inventoryItem in _inventoryItems.Values)
+            {
+                if (inventoryItem != null)
+                {
+                    inventoryItem.Deselect();
+                }
+            }
+        }
         
         private void ChangeCurrentItem(ItemSelectKeyPressedEventArgs args)
         {
             InventoryItemType inventoryItemType = (InventoryItemType)args.KeyCode;
             ChangeCurrentItem(inventoryItemType);
-            Debug.Log(inventoryItemType);
         }
 
         public void ChangeCurrentItem(InventoryItemType inventoryItemType)
