@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Interfaces;
 using Player;
 using Weapons.Shooting;
@@ -8,8 +9,9 @@ namespace Weapons
 {
     public class Weapon : MonoBehaviour, IInventoryItem
     {
-        public WeaponSettings Settings;
-        
+        [SerializeField] private WeaponType _weaponType;
+        [SerializeField] private WeaponSettings _settings;
+        //TODO: Rewrite this below
         [SerializeField] private int _currentCapacity;
 
         private IShooting _shootingLogic;
@@ -19,6 +21,20 @@ namespace Weapons
         private Coroutine _attackingRoutine;
         private Coroutine _reloadingRoutine;
         private Coroutine _coolingRoutine;
+        
+        public WeaponSettings Settings
+        {
+            get => _settings;
+            set
+            {
+                if (value.WeaponType != _weaponType)
+                {
+                    throw new ArgumentException("Can't set weapon with different type");
+                }
+
+                _settings = value;
+            }
+        }
 
         private void Start()
         {
@@ -153,8 +169,18 @@ namespace Weapons
         }
 
 #if UNITY_EDITOR
+        private void OnValidate()
+        {
+            if (!gameObject.activeInHierarchy)
+                return;
+
+            Settings = _settings;
+        }
+        
         private void OnDrawGizmos()
         {
+            if (Settings == null) return;
+            
             switch (Settings.WeaponCastType)
             {
                 case WeaponCastType.None:

@@ -5,8 +5,9 @@ namespace Weapons
     [Serializable]
     public enum WeaponType
     {
-        Gun = 0,
-        Pistol = 1,
-        Melee = 2
+        Primary = 0,
+        Secondary = 1,
+        Melee = 2,
+        Default = 3
     }
 }
