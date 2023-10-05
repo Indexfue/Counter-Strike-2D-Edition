@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Player.UI.Weapons;
 using UnityEngine;
 
 namespace Utilities.Grenades
@@ -10,10 +11,13 @@ namespace Utilities.Grenades
         [SerializeField] protected float _explosionTime;
         [SerializeField] protected LayerMask _targetMask;
         [SerializeField] protected LayerMask _obstacleMask;
-        
+
         [SerializeField] protected GrenadeFlightLogic _flightLogic;
-        
+
+        [SerializeField] protected Texture _icon;
+
         public GrenadeType GrenadeType => _grenadeType;
+        public Texture Icon => _icon;
 
         private void Start()
         {

@@ -1,10 +1,10 @@
 ﻿using System;
 using Player;
+using Player.UI.Weapons;
 using UnityEngine;
 
 namespace Weapons
 {
-    [Serializable]
     [CreateAssetMenu(fileName = "WeaponSettings", menuName = "Weapons", order = 51)]
     public class WeaponSettings : ScriptableObject
     {
@@ -28,6 +28,7 @@ namespace Weapons
         [Header("Prefab")]
         [SerializeField] private GameObject _prefab;
         [SerializeField] private Transform _shootPoint;
+        [SerializeField] private ItemViewData _viewData;
         
         [Header("Layer Mask")]
         [SerializeField] private LayerMask _targetMask;
@@ -50,7 +51,8 @@ namespace Weapons
 
         public GameObject Prefab => _prefab;
         public Transform ShootPoint => _shootPoint;
-
+        public ItemViewData ViewData => _viewData;
+        
         public LayerMask TargetMask => _targetMask;
         public LayerMask ObstacleMask => _obstacleMask;
         public LayerMask IgnoreMask => _ignoreMask;

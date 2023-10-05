@@ -1,4 +1,7 @@
 ﻿using System;
+using Player;
+using Player.UI.Weapons;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Utilities.Grenades
@@ -11,6 +14,8 @@ namespace Utilities.Grenades
         [SerializeField] private string _title;
         [SerializeField] private GrenadeType _grenadeType;
         
+        [SerializeField] private ItemViewData _viewData;
+
         public GameObject Prefab { get; }
         public int MaxCapacity { get; }
         public int CurrentCapacity
@@ -30,6 +35,8 @@ namespace Utilities.Grenades
                 _grenadeType = value;
             }
         }
+        
+        public ItemViewData ViewData => _viewData;
 
         public void Use(Transform thrower, GrenadeFlightMode flightMode)
         {
@@ -42,11 +49,14 @@ namespace Utilities.Grenades
 
         public GrenadeInventoryItem(GameObject prefab, GrenadeType grenadeType, int maxCapacity)
         {
-            Prefab = prefab;
             _grenadeType = grenadeType;
             MaxCapacity = maxCapacity;
             _currentCapacity = 1;
+            Prefab = prefab;
             _title = Prefab.name;
+            
+            Grenade grenade = prefab.GetComponent<Grenade>();
+            _viewData = new ItemViewData(_title, grenade.Icon, InventoryItemType.Grenade);
         }
     }
 }
