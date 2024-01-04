@@ -80,7 +80,8 @@ namespace Weapons
 
         private void PerformAttack()
         {
-            _shootingLogic.Shoot(Settings.ShootPoint, Settings, _continiousShotCount);
+            GameObject playerInstance = gameObject.GetComponentInParent(typeof(PlayerMovement)).gameObject;
+            _shootingLogic.Shoot(Settings.ShootPoint, Settings, _continiousShotCount, playerInstance);
 
             if (Settings.WeaponType != WeaponType.Melee)
             {
@@ -187,6 +188,7 @@ namespace Weapons
                     break;
                 case WeaponCastType.Raycast:
                     DrawLine();
+                    DrawSpread();
                     break;
                 case WeaponCastType.Overlap:
                     DrawSphere();
@@ -207,6 +209,32 @@ namespace Weapons
             else
             {
                 Gizmos.DrawRay(transform.position, direction);
+            }
+        }
+
+        private void DrawSpread()
+        {
+            Gizmos.color = Color.cyan;
+            Vector3 direction = transform.TransformDirection(Vector3.forward) * 50f;
+            RaycastHit hit;
+            
+            float spreadRadiusLength = 0.1f;
+
+            if (Settings.WeaponBallistics.UseSpread)
+            {
+                spreadRadiusLength = _settings.WeaponBallistics.SpreadRadius / 2;
+                PlayerMovement playerMovement = GetComponentInParent<PlayerMovement>();
+
+                if (playerMovement is not null)
+                {
+                    spreadRadiusLength += playerMovement.CurrentMovementSpeed * Settings.WeaponBallistics.SpreadRadius;
+                }
+            }
+            Vector3 spreadCubeSize = new Vector3(spreadRadiusLength, 0.1f, 0.1f);
+            
+            if (Physics.Raycast(transform.position, direction, out hit, Settings.ObstacleMask))
+            {
+                Gizmos.DrawCube(hit.point, spreadCubeSize);
             }
         }
 
