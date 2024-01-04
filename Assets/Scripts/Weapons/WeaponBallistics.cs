@@ -1,5 +1,6 @@
 ﻿using System;
 using Player;
+using Unity.VisualScripting;
 using UnityEngine;
 using Weapons.Recoil;
 using Random = UnityEngine.Random;
@@ -9,8 +10,6 @@ namespace Weapons
     [Serializable]
     public sealed class WeaponBallistics
     {
-        private const float _movementSpeedSpreadRate = 0.35f;
-        
         [SerializeField, Range(0,5f)] private float spreadRate;
         [SerializeField] private float spreadRadius;
         [SerializeField] private bool useSpread;
@@ -19,13 +18,17 @@ namespace Weapons
         [SerializeField] private RecoilPattern recoilPattern;
         [SerializeField] private bool useRecoil;
 
+        public float SpreadRate => spreadRate;
+        public float SpreadRadius => spreadRadius;
+        public bool UseSpread => useSpread;
+
         private void GetSpread(ref Vector3 direction, GameObject playerInstance)
         {
             if (playerInstance.TryGetComponent(out PlayerMovement playerMovement))
             {
-                float movementSpreadRate = playerMovement.CurrentMovementSpeed * _movementSpeedSpreadRate;
+                float movementSpreadRate = playerMovement.CurrentMovementSpeed * spreadRadius;
                 Debug.Log($"{-spreadRadius - movementSpreadRate}, {spreadRadius + movementSpreadRate}");
-                direction += new Vector3(GetRandomPoint(movementSpreadRate), 0, GetRandomPoint(movementSpreadRate));
+                direction += new Vector3(GetRandomPoint(movementSpreadRate), 0, 0);
             }
         }
 
