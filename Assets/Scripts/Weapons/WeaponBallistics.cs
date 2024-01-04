@@ -10,34 +10,34 @@ namespace Weapons
     [Serializable]
     public sealed class WeaponBallistics
     {
-        [SerializeField, Range(0,5f)] private float spreadRate;
-        [SerializeField] private float spreadRadius;
+        [SerializeField, Range(0,100f)] private float spreadMovementRate;
+        [SerializeField, Range(0.1f, 1f)] private float spreadRadius;
         [SerializeField] private bool useSpread;
 
-        [SerializeField, Range(1f,2f)] private float recoilForce;
+        [SerializeField, Range(1f,100f)] private float recoilForce;
         [SerializeField] private RecoilPattern recoilPattern;
         [SerializeField] private bool useRecoil;
 
-        public float SpreadRate => spreadRate;
+        public float SpreadRate => spreadMovementRate;
         public float SpreadRadius => spreadRadius;
         public bool UseSpread => useSpread;
 
         private void GetSpread(ref Vector3 direction, GameObject playerInstance)
         {
+            //TODO: Make spread normal
             if (playerInstance.TryGetComponent(out PlayerMovement playerMovement))
             {
-                float movementSpreadRate = playerMovement.CurrentMovementSpeed * spreadRadius;
-                Debug.Log($"{-spreadRadius - movementSpreadRate}, {spreadRadius + movementSpreadRate}");
-                direction += new Vector3(GetRandomPoint(movementSpreadRate), 0, 0);
+                float currentSpreadMovementRate = 1 + playerMovement.CurrentMovementSpeed * spreadMovementRate;
+                direction += new Vector3(GetRandomPoint(currentSpreadMovementRate), 0, GetRandomPoint(currentSpreadMovementRate));
             }
         }
 
-        private float GetRandomPoint(float delta) => Random.Range(-spreadRadius - delta, spreadRadius + delta) * spreadRate;
+        private float GetRandomPoint(float delta) => Random.Range(-spreadRadius, spreadRadius) * delta;
 
         private void GetRecoil(ref Vector3 direction, int continiousShotCount)
         {
             var recoilPattern = this.recoilPattern.GetRecoilPattern();
-            direction += Vector3.forward * recoilPattern[continiousShotCount % recoilPattern.Length] * recoilForce;
+            direction += new Vector3(1, 0, 1) * recoilPattern[continiousShotCount % recoilPattern.Length] * recoilForce;
         }
 
         public Vector3 GetBulletDirection(Vector3 direction, int continiousShotCount, GameObject playerInstance)
