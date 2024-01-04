@@ -1,11 +1,11 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Player
 {
     public class PlayerRotator : MonoBehaviour
     {
-        [SerializeField, Range(0f, 1f)] private float _mouseSensitivity = 1f;
-        [SerializeField] private Camera _camera;
+        [SerializeField, Range(0f, 1f)] private float mouseSensitivity = 1f;
 
         private void Start()
         {
@@ -18,10 +18,7 @@ namespace Player
             var _rotateValue = new Vector3(0, x * -1, 0);
 
             transform.eulerAngles -= _rotateValue;
-            transform.eulerAngles +=  _rotateValue * _mouseSensitivity * Time.deltaTime;
-            _camera.transform.eulerAngles = new Vector3(_camera.transform.eulerAngles.x, transform.eulerAngles.y, _camera.transform.eulerAngles.z);
-            _camera.transform.position =
-                new Vector3(transform.position.x, _camera.transform.position.y, transform.position.z);
+            transform.eulerAngles +=  _rotateValue * mouseSensitivity * Time.deltaTime;
         }
     }
 }
