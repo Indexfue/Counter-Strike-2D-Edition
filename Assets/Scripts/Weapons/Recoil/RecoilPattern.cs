@@ -23,11 +23,11 @@ namespace Weapons.Recoil
         
         public readonly float[] RecoilPattern_AK47 = new[]
         {
-            0f, 0f, 0f, 2f, 2f, 2f, 2f, 
-            1f, 1f, 1f, 1f, 1f, 1f, 
-            -2f, -2f, -2f, -2f, -2f,
-            -2f, -2f, 2f, 2f, 2f, -3f, 
-            -2f, -1f, -2f, -3f, 2f, 2.5f
+            0f, 0.5f, 1f, 2f, 2.5f, 3f, 2.5f, 
+            2f, 1.5f, 1.8f, 2f, 1.8f, 1.5f, 
+            -2f, -1.5f, -1f, -0.5f, -1f,
+            -1.5f, -2f, -1.5f, -1.2f, -0.5f, 0f, 
+            0.5f, 0.8f, 1.5f, 1.2f, 0.5f, 0.2f
         };
 
         public readonly float[] RecoilPattern_Deagle = new[]
