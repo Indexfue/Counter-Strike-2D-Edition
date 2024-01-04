@@ -8,29 +8,29 @@ namespace Weapons
     [Serializable]
     public sealed class WeaponBallistics
     {
-        [SerializeField, Range(0,5f)] private float _spreadRate;
-        [SerializeField] private float _spreadRadius;
-        [SerializeField] private bool _useSpread;
+        [SerializeField, Range(0,5f)] private float spreadRate;
+        [SerializeField] private float spreadRadius;
+        [SerializeField] private bool useSpread;
 
-        [SerializeField, Range(1f,2f)] private float _recoilForce;
-        [SerializeField] private RecoilPattern _recoilPattern;
-        [SerializeField] private bool _useRecoil;
+        [SerializeField, Range(1f,2f)] private float recoilForce;
+        [SerializeField] private RecoilPattern recoilPattern;
+        [SerializeField] private bool useRecoil;
         
         private void GetSpread(ref Vector3 direction) => direction += new Vector3(GetRandomPoint(), 0, GetRandomPoint());
 
-        private float GetRandomPoint() => Random.Range(-_spreadRadius, _spreadRadius) * _spreadRate;
+        private float GetRandomPoint() => Random.Range(-spreadRadius, spreadRadius) * spreadRate;
 
         private void GetRecoil(ref Vector3 direction, int continiousShotCount)
         {
-            var recoilPattern = _recoilPattern.GetRecoilPattern();
-            direction += Vector3.forward * recoilPattern[continiousShotCount % recoilPattern.Length] * _recoilForce;
+            var recoilPattern = this.recoilPattern.GetRecoilPattern();
+            direction += Vector3.forward * recoilPattern[continiousShotCount % recoilPattern.Length] * recoilForce;
         }
 
         public Vector3 GetBulletDirection(Vector3 direction, int continiousShotCount)
         {
-            if (_useRecoil) 
+            if (useRecoil) 
                 GetRecoil(ref direction, continiousShotCount);
-            if (_useSpread)
+            if (useSpread)
                 GetSpread(ref direction);
             
             return direction;
