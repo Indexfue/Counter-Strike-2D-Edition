@@ -80,7 +80,8 @@ namespace Weapons
 
         private void PerformAttack()
         {
-            _shootingLogic.Shoot(Settings.ShootPoint, Settings, _continiousShotCount);
+            GameObject playerInstance = gameObject.GetComponentInParent(typeof(PlayerMovement)).gameObject;
+            _shootingLogic.Shoot(Settings.ShootPoint, Settings, _continiousShotCount, playerInstance);
 
             if (Settings.WeaponType != WeaponType.Melee)
             {

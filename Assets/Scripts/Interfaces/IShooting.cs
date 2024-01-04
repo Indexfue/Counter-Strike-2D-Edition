@@ -5,6 +5,6 @@ namespace Interfaces
 {
     public interface IShooting
     {
-        public void Shoot(Transform shootPoint, WeaponSettings settings, int continiousShotCount);
+        public void Shoot(Transform shootPoint, WeaponSettings settings, int continiousShotCount, GameObject playerInstance);
     }
 }

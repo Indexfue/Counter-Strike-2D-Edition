@@ -8,12 +8,10 @@ namespace Weapons.Shooting
     {
         private RaycastHit[] _hittedObjects = new RaycastHit[5];
         
-        public void Shoot(Transform shootPoint, WeaponSettings settings, int continiousShotCount)
+        public void Shoot(Transform shootPoint, WeaponSettings settings, int continiousShotCount, GameObject playerInstance)
         {
-            
-            
             Vector3 lookingDirection = shootPoint.TransformDirection(Vector3.forward) * 50;
-            Vector3 bulletDirection = settings.WeaponBallistics.GetBulletDirection(lookingDirection, continiousShotCount);
+            Vector3 bulletDirection = settings.WeaponBallistics.GetBulletDirection(lookingDirection, continiousShotCount, playerInstance);
             var hit = Physics.RaycastNonAlloc(shootPoint.position, bulletDirection, _hittedObjects, settings.ShootDistance, ~settings.IgnoreMask);
 
             for (int i = 0; i < hit; i++)
