@@ -1,9 +1,7 @@
 ﻿using System;
 using Player;
 using Player.UI.Weapons;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Utilities.Grenades
 {

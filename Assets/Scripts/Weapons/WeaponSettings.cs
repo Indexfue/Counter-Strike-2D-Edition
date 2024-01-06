@@ -1,6 +1,4 @@
-﻿using System;
-using Player;
-using Player.UI.Weapons;
+﻿using Player.UI.Weapons;
 using UnityEngine;
 
 namespace Weapons

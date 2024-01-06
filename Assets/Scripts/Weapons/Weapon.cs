@@ -5,7 +5,6 @@ using Player;
 using Player.GUI;
 using Weapons.Shooting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Weapons
 {

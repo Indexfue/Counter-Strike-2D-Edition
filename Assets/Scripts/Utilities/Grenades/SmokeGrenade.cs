@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
 using Utilities.Grenades.GrenadeFields;
 
 namespace Utilities.Grenades

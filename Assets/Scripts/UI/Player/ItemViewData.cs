@@ -6,19 +6,19 @@ namespace Player.UI.Weapons
     [Serializable]
     public struct ItemViewData
     {
-        [SerializeField] private string _title;
-        [SerializeField] private Texture _icon;
-        [SerializeField] private InventoryItemType _type;
+        [SerializeField] private string title;
+        [SerializeField] private Texture icon;
+        [SerializeField] private InventoryItemType type;
 
-        public string Title => _title;
-        public Texture Icon => _icon;
-        public InventoryItemType Type => _type;
+        public string Title => title;
+        public Texture Icon => icon;
+        public InventoryItemType Type => type;
 
         public ItemViewData(string title, Texture icon, InventoryItemType type)
         {
-            _title = title;
-            _icon = icon;
-            _type = type;
+            this.title = title;
+            this.icon = icon;
+            this.type = type;
         }
     }
 }

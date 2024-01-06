@@ -1,22 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Interfaces;
-using JetBrains.Annotations;
 using Player;
 using Player.UI.Weapons;
-using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
-using UnityEngine.UI;
-using Object = System.Object;
 
 namespace UI.Player
 {
     public class PlayerInventoryView : MonoBehaviour
     {
-        [SerializeField] private GameObject _inventoryItemViewPrefab;
+        [SerializeField] private GameObject inventoryItemViewPrefab;
         
         private readonly List<PlayerInventoryItemView> _itemViews = new List<PlayerInventoryItemView>();
         private PlayerInventoryItemView _currentItem;
@@ -25,7 +17,7 @@ namespace UI.Player
         {
             foreach(InventoryItemType type in Enum.GetValues(typeof(InventoryItemType)))
             {
-                GameObject obj = Instantiate(_inventoryItemViewPrefab);
+                GameObject obj = Instantiate(inventoryItemViewPrefab);
                 
                 PlayerInventoryItemView UIElement = obj.GetComponent<PlayerInventoryItemView>();
                 UIElement.transform.SetParent(transform, false);

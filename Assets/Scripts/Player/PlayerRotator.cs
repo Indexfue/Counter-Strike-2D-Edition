@@ -15,10 +15,10 @@ namespace Player
         void Update()
         {
             var x = Input.GetAxis("Mouse X");
-            var _rotateValue = new Vector3(0, x * -1, 0);
+            var rotateValue = new Vector3(0, x * -1, 0);
 
-            transform.eulerAngles -= _rotateValue;
-            transform.eulerAngles +=  _rotateValue * mouseSensitivity * Time.deltaTime;
+            transform.eulerAngles -= rotateValue;
+            transform.eulerAngles +=  rotateValue * mouseSensitivity * Time.deltaTime;
         }
     }
 }

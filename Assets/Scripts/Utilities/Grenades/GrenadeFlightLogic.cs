@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using Player;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Utilities.Grenades
 {

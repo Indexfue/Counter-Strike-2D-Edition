@@ -9,11 +9,11 @@ namespace Utilities.Grenades.GrenadeFields
     [RequireComponent(typeof(Collider))]
     public class Fire : MonoBehaviour
     {
-        [SerializeField] private float _duration;
-        [SerializeField] private ParticleSystem _particles;
+        [SerializeField] private float duration;
+        [SerializeField] private ParticleSystem particles;
 
-        [SerializeField] private int _damage;
-        [SerializeField] private float _tick;
+        [SerializeField] private int damage;
+        [SerializeField] private float tick;
 
         private readonly List<FireEffect> _targetsInFire = new List<FireEffect>();
         
@@ -24,7 +24,7 @@ namespace Utilities.Grenades.GrenadeFields
 
         private IEnumerator LifeRoutine()
         {
-            yield return new WaitForSeconds(_duration);
+            yield return new WaitForSeconds(duration);
             Die();
         }
 
@@ -49,7 +49,7 @@ namespace Utilities.Grenades.GrenadeFields
             if (other.TryGetComponent<FieldOfView>(out FieldOfView fov))
             {
                 FireEffect target = fov.AddComponent<FireEffect>();
-                target.Initialize(_damage, _tick);
+                target.Initialize(damage, tick);
                 _targetsInFire.Add(target);
             }
         }

@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Effects;
 using Unity.VisualScripting;
 using UnityEngine;

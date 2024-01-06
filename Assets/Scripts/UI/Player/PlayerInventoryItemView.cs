@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using Player;
 using Player.UI.Weapons;
 using TMPro;
@@ -10,9 +9,9 @@ namespace UI.Player
 {
     public class PlayerInventoryItemView : MonoBehaviour
     {
-        [SerializeField] private TMP_Text _title;
-        [SerializeField] private TMP_Text _binding;
-        [SerializeField] private RawImage _icon;
+        [SerializeField] private TMP_Text title;
+        [SerializeField] private TMP_Text binding;
+        [SerializeField] private RawImage icon;
         
         public InventoryItemType Type { get; private set; }
 
@@ -26,19 +25,19 @@ namespace UI.Player
         {
             if (data.Type != Type) return;
             
-            _title.text = data.Title;
-            _icon.texture = data.Icon;
-            _binding.text = binding ?? _binding.text;
+            title.text = data.Title;
+            icon.texture = data.Icon;
+            this.binding.text = binding ?? this.binding.text;
         }
 
         public void SetSelected()
         {
-            _title.alpha = 1;
+            title.alpha = 1;
         }
 
         public void SetUnselected()
         {
-            _title.alpha = 0;
+            title.alpha = 0;
         }
     }
 }
