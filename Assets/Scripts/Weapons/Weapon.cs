@@ -2,17 +2,19 @@
 using System.Collections;
 using Interfaces;
 using Player;
+using Player.GUI;
 using Weapons.Shooting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Weapons
 {
     public class Weapon : MonoBehaviour, IInventoryItem
     {
-        [SerializeField] private WeaponType _weaponType;
-        [SerializeField] private WeaponSettings _settings;
+        [SerializeField] private WeaponType weaponType;
+        [SerializeField] private WeaponSettings settings;
         //TODO: Rewrite this below
-        [SerializeField] private int _currentCapacity;
+        [SerializeField] private int currentCapacity;
 
         private IShooting _shootingLogic;
         private float _lastShotTime;
@@ -21,18 +23,20 @@ namespace Weapons
         private Coroutine _attackingRoutine;
         private Coroutine _reloadingRoutine;
         private Coroutine _coolingRoutine;
+
+        private CameraShake _cameraShake;
         
         public WeaponSettings Settings
         {
-            get => _settings;
+            get => settings;
             set
             {
-                if (value.WeaponType != _weaponType)
+                if (value.WeaponType != weaponType)
                 {
                     throw new ArgumentException("Can't set weapon with different type");
                 }
 
-                _settings = value;
+                settings = value;
             }
         }
 
@@ -85,7 +89,7 @@ namespace Weapons
 
             if (Settings.WeaponType != WeaponType.Melee)
             {
-                _currentCapacity -= 1;
+                currentCapacity -= 1;
                 _continiousShotCount = Mathf.Clamp(_continiousShotCount + 1, 0, Settings.MaxCapacity);
                 _lastShotTime = Time.time;
             }
@@ -93,7 +97,7 @@ namespace Weapons
         
         private bool TryAttack()
         {
-            if (Settings.WeaponType != WeaponType.Melee && _currentCapacity == 0) return false;
+            if (Settings.WeaponType != WeaponType.Melee && currentCapacity == 0) return false;
 
             PerformAttack();
             return true;
@@ -119,7 +123,7 @@ namespace Weapons
         {
             Debug.Log("Reloading");
             yield return new WaitForSeconds(Settings.ReloadDuration);
-            _currentCapacity = Settings.MaxCapacity;
+            currentCapacity = Settings.MaxCapacity;
             StopRoutineAsVariable(ref _reloadingRoutine);
         }
 
@@ -175,7 +179,7 @@ namespace Weapons
             if (!gameObject.activeInHierarchy)
                 return;
 
-            Settings = _settings;
+            Settings = settings;
         }
         
         private void OnDrawGizmos()
@@ -222,7 +226,7 @@ namespace Weapons
 
             if (Settings.WeaponBallistics.UseSpread)
             {
-                spreadRadiusLength = _settings.WeaponBallistics.SpreadRadius / 2;
+                spreadRadiusLength = settings.WeaponBallistics.SpreadRadius / 2;
                 PlayerMovement playerMovement = GetComponentInParent<PlayerMovement>();
 
                 if (playerMovement is not null)

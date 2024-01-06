@@ -5,42 +5,42 @@ using System.Collections.Generic;
 
 public sealed class FieldOfView : MonoBehaviour {
 
-	[SerializeField] private float _viewRadius;
-	[SerializeField, Range(0,360)] private float _viewAngle;
+	[SerializeField] private float viewRadius;
+	[SerializeField, Range(0,360)] private float viewAngle;
 
-	[SerializeField] private LayerMask _targetMask;
-	[SerializeField] private LayerMask _obstacleMask;
+	[SerializeField] private LayerMask targetMask;
+	[SerializeField] private LayerMask obstacleMask;
 
-	[SerializeField] private float _meshResolution;
-	[SerializeField] private  int _edgeResolveIterations;
-	[SerializeField] private  float _edgeDstThreshold;
+	[SerializeField] private float meshResolution;
+	[SerializeField] private  int edgeResolveIterations;
+	[SerializeField] private  float edgeDstThreshold;
 
-	[SerializeField] private  float _maskCutawayDst = .1f;
+	[SerializeField] private  float maskCutawayDst = .1f;
 
-	[SerializeField] private MeshFilter _viewMeshFilter;
+	[SerializeField] private MeshFilter viewMeshFilter;
 	
 	private List<Transform> _visibleTargets = new List<Transform>();
-	private Mesh viewMesh;
+	private Mesh _viewMesh;
 
 	public float ViewRadius
 	{
-		get => _viewRadius;
+		get => viewRadius;
 		set
 		{
 			if (value < 0) 
 				throw new ArgumentException("View Radius cannot be below zero.");
-			_viewRadius = value;
+			viewRadius = value;
 		}
 	}
 
 	public float ViewAngle
 	{
-		get => _viewAngle;
+		get => viewAngle;
 		set
 		{
 			if (value < 0 || 360 < value) 
 				throw new ArgumentException("View Angle have to be in 0 to 360");
-			_viewAngle = value;
+			viewAngle = value;
 		}
 	}
 
@@ -48,9 +48,9 @@ public sealed class FieldOfView : MonoBehaviour {
 
 	private void Start() 
 	{
-		viewMesh = new Mesh ();
-		viewMesh.name = "View Mesh";
-		_viewMeshFilter.mesh = viewMesh;
+		_viewMesh = new Mesh ();
+		_viewMesh.name = "View Mesh";
+		viewMeshFilter.mesh = _viewMesh;
 
 		StartCoroutine (FindTargetsWithDelay(.2f));
 	}
@@ -72,17 +72,17 @@ public sealed class FieldOfView : MonoBehaviour {
 	private void FindVisibleTargets() 
 	{
 		_visibleTargets.Clear();
-		Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, _viewRadius, _targetMask);
+		Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask);
 
 		for (int i = 0; i < targetsInViewRadius.Length; i++) 
 		{
 			Transform target = targetsInViewRadius [i].transform;
 			Vector3 dirToTarget = (target.position - transform.position).normalized;
 			
-			if (Vector3.Angle (transform.forward, dirToTarget) < _viewAngle / 2) 
+			if (Vector3.Angle (transform.forward, dirToTarget) < viewAngle / 2) 
 			{
 				float dstToTarget = Vector3.Distance (transform.position, target.position);
-				if (!Physics.Raycast (transform.position, dirToTarget, dstToTarget, _obstacleMask)) 
+				if (!Physics.Raycast (transform.position, dirToTarget, dstToTarget, obstacleMask)) 
 				{
 					_visibleTargets.Add (target);
 				}
@@ -92,19 +92,19 @@ public sealed class FieldOfView : MonoBehaviour {
 
 	private void DrawFieldOfView() 
 	{
-		int stepCount = Mathf.RoundToInt(_viewAngle * _meshResolution);
-		float stepAngleSize = _viewAngle / stepCount;
+		int stepCount = Mathf.RoundToInt(viewAngle * meshResolution);
+		float stepAngleSize = viewAngle / stepCount;
 		List<Vector3> viewPoints = new List<Vector3> ();
 		ViewCastInfo oldViewCast = new ViewCastInfo ();
 		
 		for (int i = 0; i <= stepCount; i++) 
 		{
-			float angle = transform.eulerAngles.y - _viewAngle / 2 + stepAngleSize * i;
+			float angle = transform.eulerAngles.y - viewAngle / 2 + stepAngleSize * i;
 			ViewCastInfo newViewCast = ViewCast (angle);
 
 			if (i > 0) 
 			{
-				bool edgeDstThresholdExceeded = Mathf.Abs (oldViewCast.Dst - newViewCast.Dst) > _edgeDstThreshold;
+				bool edgeDstThresholdExceeded = Mathf.Abs (oldViewCast.Dst - newViewCast.Dst) > edgeDstThreshold;
 				if (oldViewCast.Hit != newViewCast.Hit || (oldViewCast.Hit && newViewCast.Hit && edgeDstThresholdExceeded)) 
 				{
 					EdgeInfo edge = FindEdge (oldViewCast, newViewCast);
@@ -132,7 +132,7 @@ public sealed class FieldOfView : MonoBehaviour {
 		vertices [0] = Vector3.zero;
 		for (int i = 0; i < vertexCount - 1; i++) 
 		{
-			vertices [i + 1] = transform.InverseTransformPoint(viewPoints [i]) + Vector3.forward * _maskCutawayDst;
+			vertices [i + 1] = transform.InverseTransformPoint(viewPoints [i]) + Vector3.forward * maskCutawayDst;
 
 			if (i < vertexCount - 2) 
 			{
@@ -142,11 +142,11 @@ public sealed class FieldOfView : MonoBehaviour {
 			}
 		}
 
-		viewMesh.Clear ();
+		_viewMesh.Clear ();
 
-		viewMesh.vertices = vertices;
-		viewMesh.triangles = triangles;
-		viewMesh.RecalculateNormals ();
+		_viewMesh.vertices = vertices;
+		_viewMesh.triangles = triangles;
+		_viewMesh.RecalculateNormals ();
 	}
 
 
@@ -157,12 +157,12 @@ public sealed class FieldOfView : MonoBehaviour {
 		Vector3 minPoint = Vector3.zero;
 		Vector3 maxPoint = Vector3.zero;
 
-		for (int i = 0; i < _edgeResolveIterations; i++) 
+		for (int i = 0; i < edgeResolveIterations; i++) 
 		{
 			float angle = (minAngle + maxAngle) / 2;
 			ViewCastInfo newViewCast = ViewCast (angle);
 
-			bool edgeDstThresholdExceeded = Mathf.Abs (minViewCast.Dst - newViewCast.Dst) > _edgeDstThreshold;
+			bool edgeDstThresholdExceeded = Mathf.Abs (minViewCast.Dst - newViewCast.Dst) > edgeDstThreshold;
 			if (newViewCast.Hit == minViewCast.Hit && !edgeDstThresholdExceeded) 
 			{
 				minAngle = angle;
@@ -183,11 +183,11 @@ public sealed class FieldOfView : MonoBehaviour {
 		Vector3 dir = DirFromAngle (globalAngle, true);
 		RaycastHit hit;
 
-		if (Physics.Raycast (transform.position, dir, out hit, _viewRadius, _obstacleMask)) 
+		if (Physics.Raycast (transform.position, dir, out hit, viewRadius, obstacleMask)) 
 		{
 			return new ViewCastInfo (true, hit.point, hit.distance, globalAngle);
 		}
-		return new ViewCastInfo (false, transform.position + dir * _viewRadius, _viewRadius, globalAngle);
+		return new ViewCastInfo (false, transform.position + dir * viewRadius, viewRadius, globalAngle);
 	}
 
 	public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal) 

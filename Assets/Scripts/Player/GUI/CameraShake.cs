@@ -28,6 +28,11 @@ namespace Player.GUI
             StartCoroutine(StopShakingAfterTime(stopShakeTime));
         }
 
+        private void SubscribeEvent()
+        {
+            
+        }
+
         private IEnumerator StopShakingAfterTime(float stopShakeTime = 1f)
         {
             float smoothStepCount = 100f;

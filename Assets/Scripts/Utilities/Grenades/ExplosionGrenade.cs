@@ -6,18 +6,18 @@ namespace Utilities.Grenades
 {
     public class ExplosionGrenade : Grenade
     {
-        [SerializeField] private float _explodeRadius;
-        [SerializeField] private int _damage;
+        [SerializeField] private float explodeRadius;
+        [SerializeField] private int damage;
 
-        private List<GameObject> explodedObjects;
+        private List<GameObject> _explodedObjects;
 
         protected override void Explode()
         {
-            if (TryOverlap(out explodedObjects))
+            if (TryOverlap(out _explodedObjects))
             {
-                foreach (var obj in explodedObjects)
+                foreach (var obj in _explodedObjects)
                 {
-                    obj.AddComponent<ExplosionEffect>().Initialize(_damage);
+                    obj.AddComponent<ExplosionEffect>().Initialize(damage);
                 }
             }
         }
@@ -27,7 +27,7 @@ namespace Utilities.Grenades
             Collider[] overlappedObjects = new Collider[32];
             explodedObjects = new List<GameObject>();
 
-            if (Physics.OverlapSphereNonAlloc(transform.position, _explodeRadius, overlappedObjects, _targetMask) > 0)
+            if (Physics.OverlapSphereNonAlloc(transform.position, explodeRadius, overlappedObjects, targetMask) > 0)
             {
                 foreach (var obj in overlappedObjects)
                 {
@@ -35,7 +35,7 @@ namespace Utilities.Grenades
                     
                     Vector3 directionToTarget = (obj.transform.position - transform.position).normalized;
                     
-                    if (!Physics.Raycast(transform.position, directionToTarget, _obstacleMask))
+                    if (!Physics.Raycast(transform.position, directionToTarget, obstacleMask))
                     {
                         explodedObjects.Add(obj.gameObject);
                     }
@@ -53,9 +53,9 @@ namespace Utilities.Grenades
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawSphere(transform.position, _explodeRadius);
+            Gizmos.DrawSphere(transform.position, explodeRadius);
 
-            if (Physics.OverlapSphere(transform.position, _explodeRadius, _targetMask).Length > 0)
+            if (Physics.OverlapSphere(transform.position, explodeRadius, targetMask).Length > 0)
             {
                 Gizmos.color = Color.red;
             }

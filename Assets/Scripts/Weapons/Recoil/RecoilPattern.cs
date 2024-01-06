@@ -1,16 +1,17 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Weapons.Recoil
 {
     [Serializable]
     public sealed class RecoilPattern
     {
-        [SerializeField] private RecoilPatternType _recoilPatternType;
+        [SerializeField] private RecoilPatternType recoilPatternType;
         
         public float[] GetRecoilPattern()
         {
-            switch (_recoilPatternType)
+            switch (recoilPatternType)
             {
                case RecoilPatternType.AK47:
                    return RecoilPattern_AK47;

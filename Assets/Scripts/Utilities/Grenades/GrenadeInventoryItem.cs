@@ -3,44 +3,45 @@ using Player;
 using Player.UI.Weapons;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Utilities.Grenades
 {
     [Serializable]
     public struct GrenadeInventoryItem
     {
-        [SerializeField] private int _currentCapacity;
+        [SerializeField] private int currentCapacity;
         
-        [SerializeField] private string _title;
-        [SerializeField] private GrenadeType _grenadeType;
+        [SerializeField] private string title;
+        [SerializeField] private GrenadeType grenadeType;
         
-        [SerializeField] private ItemViewData _viewData;
+        [SerializeField] private ItemViewData viewData;
 
         public GameObject Prefab { get; }
         public int MaxCapacity { get; }
         public int CurrentCapacity
         {
-            get => _currentCapacity;
-            set => _currentCapacity = Mathf.Clamp(value, 0, MaxCapacity);
+            get => currentCapacity;
+            set => currentCapacity = Mathf.Clamp(value, 0, MaxCapacity);
         }
 
         public GrenadeType GrenadeType
         {
-            get => _grenadeType;
+            get => grenadeType;
             set
             {
                 if (value != Prefab.GetComponent<Grenade>().GrenadeType)
                     throw new ArgumentException("Prefab GrenadeType is not equals InventoryItem GrenadeType");
                 
-                _grenadeType = value;
+                grenadeType = value;
             }
         }
         
-        public ItemViewData ViewData => _viewData;
+        public ItemViewData ViewData => viewData;
 
         public void Use(Transform thrower, GrenadeFlightMode flightMode)
         {
-            if (_currentCapacity == 0) return;
+            if (currentCapacity == 0) return;
 
             var gameObject = GameObject.Instantiate(Prefab, thrower.position, thrower.rotation);
             gameObject.GetComponent<Grenade>().Use(flightMode, thrower);
@@ -49,14 +50,14 @@ namespace Utilities.Grenades
 
         public GrenadeInventoryItem(GameObject prefab, GrenadeType grenadeType, int maxCapacity)
         {
-            _grenadeType = grenadeType;
+            this.grenadeType = grenadeType;
             MaxCapacity = maxCapacity;
-            _currentCapacity = 1;
+            currentCapacity = 1;
             Prefab = prefab;
-            _title = Prefab.name;
+            title = Prefab.name;
             
             Grenade grenade = prefab.GetComponent<Grenade>();
-            _viewData = new ItemViewData(_title, grenade.Icon, InventoryItemType.Grenade);
+            viewData = new ItemViewData(title, grenade.Icon, InventoryItemType.Grenade);
         }
     }
 }
