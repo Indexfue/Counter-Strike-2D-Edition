@@ -1,10 +1,11 @@
 ﻿using System.Collections;
+using Interfaces;
 using UnityEngine;
 
 namespace Utilities.Grenades
 {
     [RequireComponent(typeof(GrenadeFlightLogic))]
-    public abstract class Grenade : Utility
+    public abstract class Grenade : MonoBehaviour, IInventoryItem
     {
         [SerializeField] protected GrenadeType grenadeType;
         [SerializeField] protected float explosionTime;
@@ -35,6 +36,16 @@ namespace Utilities.Grenades
         public virtual void Use(GrenadeFlightMode flightMode, Transform thrower)
         {
             flightLogic.Fly(flightMode, thrower);
+        }
+
+        public void Select()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Deselect()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

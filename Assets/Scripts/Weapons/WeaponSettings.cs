@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Player;
+using UnityEngine;
 
 namespace Weapons
 {
@@ -12,7 +13,7 @@ namespace Weapons
         
         [Header("Weapon type")]
         [SerializeField] private WeaponCastType weaponCastType;
-        [SerializeField] private WeaponType weaponType;
+        [SerializeField] private InventoryItemType inventoryItemType;
 
         [Header("Shooting")]
         [SerializeField] private int damage;
@@ -22,9 +23,6 @@ namespace Weapons
         [SerializeField] private bool canClampShooting;
         [SerializeField] private WeaponBallistics weaponBallistics;
         
-        [Header("Prefab")]
-        [SerializeField] private GameObject prefab;
-        [SerializeField] private Transform shootPoint;
         //[SerializeField] private ItemViewData viewData;
         
         [Header("Layer Mask")]
@@ -37,7 +35,7 @@ namespace Weapons
         public float CoolingWeaponDuration => coolingWeaponDuration;
 
         public WeaponCastType WeaponCastType => weaponCastType;
-        public WeaponType WeaponType => weaponType;
+        public InventoryItemType InventoryItemType => inventoryItemType;
 
         public int Damage => damage;
         public float ShootDistance => shootDistance;
@@ -45,19 +43,11 @@ namespace Weapons
         public float ShotsPerSecond => 1f / shotsPerSecond;
         public bool CanClampShooting => canClampShooting;
         public WeaponBallistics WeaponBallistics => weaponBallistics;
-
-        public GameObject Prefab => prefab;
-        public Transform ShootPoint => shootPoint;
+        
         //public ItemViewData ViewData => viewData;
         
         public LayerMask TargetMask => targetMask;
         public LayerMask ObstacleMask => obstacleMask;
         public LayerMask IgnoreMask => ignoreMask;
-
-        public void Initialize(GameObject Prefab, Transform ShootPoint)
-        {
-            prefab = Prefab;
-            shootPoint = ShootPoint;
-        }
     }
 }
