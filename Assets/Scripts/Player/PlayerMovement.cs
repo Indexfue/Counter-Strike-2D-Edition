@@ -37,7 +37,7 @@ namespace Player
             StopCoroutine(_unitCounterCoroutine);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             MoveCharacter();
         }
