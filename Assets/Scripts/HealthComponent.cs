@@ -4,12 +4,12 @@ namespace Player
 {
     public class HealthComponent : MonoBehaviour
     {
-        [SerializeField] private int _health;
-        public int Health => _health;
+        [SerializeField] private int health;
+        public int Health => health;
 
         public void ApplyDamage(int damage)
         {
-            _health -= damage;
+            health -= damage;
         }
     }
 }

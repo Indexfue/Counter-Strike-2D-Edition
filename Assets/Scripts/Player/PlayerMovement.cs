@@ -8,7 +8,7 @@ namespace Player
     [RequireComponent(typeof(CharacterController))]
     public sealed class PlayerMovement : MonoBehaviour
     {
-        [FormerlySerializedAs("_movementSpeed")] [SerializeField, Range(0f, 1f)] private float baseMovementSpeed;
+        [SerializeField, Range(0f, 1f)] private float baseMovementSpeed;
         private Vector3 _movementDirection;
         private Rigidbody2D _rigidbody;
         private CharacterController _characterController;
@@ -37,7 +37,7 @@ namespace Player
             StopCoroutine(_unitCounterCoroutine);
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             MoveCharacter();
         }

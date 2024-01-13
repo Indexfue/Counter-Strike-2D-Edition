@@ -9,10 +9,10 @@ namespace Utilities.Grenades.GrenadeFields
     [RequireComponent(typeof(Collider))]
     public class Smoke : MonoBehaviour
     {
-        [SerializeField] private float _duration;
-        [SerializeField] private ParticleSystem _particles;
+        [SerializeField] private float duration;
+        [SerializeField] private ParticleSystem particles;
 
-        [SerializeField] private float _blindRate;
+        [SerializeField] private float blindRate;
 
         private readonly HashSet<Collider> _targetsInSmoke = new HashSet<Collider>();
 
@@ -23,7 +23,7 @@ namespace Utilities.Grenades.GrenadeFields
 
         private IEnumerator LifeRoutine()
         {
-            yield return new WaitForSeconds(_duration);
+            yield return new WaitForSeconds(duration);
             Die();
         }
 

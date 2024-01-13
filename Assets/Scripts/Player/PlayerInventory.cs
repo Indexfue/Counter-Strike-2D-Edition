@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Interfaces;
-using UI.Player;
-using UnityEditor;
 using UnityEngine;
 using Utilities.Grenades;
 using Weapons;
@@ -11,134 +10,106 @@ namespace Player
 {
     public class PlayerInventory : MonoBehaviour
     {
-        [SerializeField] private PlayerInventoryView _view;
-        [SerializeField] private SerializableDictionary<InventoryItemType, IInventoryItem> _inventoryItems;
-        private IInventoryItem _currentInventoryItem;
+        [SerializeField] private SerializableDictionary<InventoryItemType, WeaponSettings> weaponsSettings;
         
-        public void Start()
-        {
-            _inventoryItems = new SerializableDictionary<InventoryItemType, IInventoryItem>()
-            {
-                [InventoryItemType.Primary] = GetComponentInChildren<PrimaryWeapon>(),
-                [InventoryItemType.Secondary] = GetComponentInChildren<SecondaryWeapon>(),
-                [InventoryItemType.Melee] = GetComponentInChildren<MeleeWeapon>(),
-                [InventoryItemType.Grenade] = GetComponentInChildren<GrenadeInventoryItems>()
-            };
-            _view.Initialize();
 
-            DeselectAll();
-            SetStartWeapon();
-            OnInventoryUpdate();
+        [SerializeField] private GrenadeInventory grenadeInventory;
+        [SerializeField] private Weapon weaponObject;
+
+        private IInventoryItem _currentInventoryItem;
+
+        public IInventoryItem CurrentInventoryItem
+        {
+            get => _currentInventoryItem;
+            set
+            {
+                if (value == CurrentInventoryItem)
+                {
+                    return;
+                }
+                _currentInventoryItem?.Deselect();
+                _currentInventoryItem = value;
+                _currentInventoryItem.Select();
+            }
         }
 
+        private void Start()
+        {
+            weaponsSettings = new()
+            {
+                [InventoryItemType.Primary] = null,
+                [InventoryItemType.Secondary] = null,
+                [InventoryItemType.Melee] = null,
+            };
+            
+            DeselectAll();
+            SelectFirst();
+        }
+        
         private void OnEnable()
         {
-            EventManager.Subscribe<ItemSelectKeyPressedEventArgs>(ChangeCurrentItem);
+            EventManager.Subscribe<ItemSelectKeyPressedEventArgs>(OnItemSelectKeyPressed);
         }
 
         private void OnDisable()
         {
-            EventManager.Unsubscribe<ItemSelectKeyPressedEventArgs>(ChangeCurrentItem);
-        }
-
-        private void OnInventoryUpdate()
-        {
-            foreach (var item in _inventoryItems.Values)
-            {
-                if (item is Weapon weapon)
-                {
-                    if (weapon.Settings == null) continue;
-
-                    _view.UpdateView(weapon.Settings.ViewData);
-                }
-            }
+            EventManager.Unsubscribe<ItemSelectKeyPressedEventArgs>(OnItemSelectKeyPressed);
         }
         
-        private void ChangeCurrentItem(ItemSelectKeyPressedEventArgs args)
+        private void OnItemSelectKeyPressed(ItemSelectKeyPressedEventArgs args)
         {
             InventoryItemType inventoryItemType = (InventoryItemType)args.KeyCode;
-            ChangeCurrentItem(inventoryItemType);
+            SelectInventoryItem(inventoryItemType);
         }
 
-        public void ChangeCurrentItem(InventoryItemType inventoryItemType)
+        // TODO: Rewrite this awful thing
+        public void SelectInventoryItem(InventoryItemType inventoryItemType)
         {
-            if (_inventoryItems.TryGetValue(inventoryItemType, out IInventoryItem item))
+            if (inventoryItemType == InventoryItemType.Grenade)
             {
-                if (item != null)
+                if (grenadeInventory.IsEmpty)
                 {
-                    _currentInventoryItem?.Deselect();
-                    _currentInventoryItem = item;
-                    _currentInventoryItem.Select();
-                    
-                    _view.SetCurrentItemView(inventoryItemType);
+                    return;
                 }
+                CurrentInventoryItem = grenadeInventory;
             }
-        }
-        
-        private void SetStartWeapon()
-        {
-            foreach (var inventoryItem in _inventoryItems.Values)
+            else
             {
-                if (inventoryItem is Weapon weapon)
+                if (weaponsSettings[inventoryItemType] == null)
                 {
-                    if (weapon.Settings != null)
-                    {
-                        inventoryItem.Select();
-                        _view.SetCurrentItemView(weapon.Settings.ViewData.Type);
-                        return;
-                    }
+                    return;
                 }
-                else
-                {
-                    throw new Exception("Need to add at least 1 weapon settings (Primary/Secondary/Melee)");
-                }
+                weaponObject.Settings = weaponsSettings[inventoryItemType];
+                CurrentInventoryItem = weaponObject;
             }
         }
 
-        private void DeselectAll()
+        public void SelectFirst()
         {
-            foreach (var inventoryItem in _inventoryItems.Values)
+            WeaponSettings settings = weaponsSettings.Values.First(e => e is not null);
+            if (settings != null)
             {
-                if (inventoryItem != null)
-                {
-                    inventoryItem.Deselect();
-                }
+                weaponObject.Settings = settings;
+                return;
             }
-        }
-        
-        public void AddItem(InventoryItemType inventoryItemType, IInventoryItem item)
-        {
-            if (_inventoryItems.TryGetValue(inventoryItemType, out IInventoryItem currentItem))
-            {
-                if (currentItem == null)
-                {
-                    _inventoryItems[inventoryItemType] = item;
-                }
-            }
+
+            SelectInventoryItem(InventoryItemType.Grenade);
         }
 
-        public void DropItem()
+        public void DeselectAll()
         {
-            if (_currentInventoryItem == _inventoryItems[InventoryItemType.Melee])
-                return;
+            weaponObject.Deselect();
+            grenadeInventory.Deselect();
+        }
+
+        public void AddInventoryItem(InventoryItemType inventoryItemType, IInventoryItem item)
+        {
             
-            //_view.UpdateView(_inventoryItems.FirstOrDefault(e => e.Value == _currentInventoryItem).Key);
-            _currentInventoryItem.Deselect();
-            _currentInventoryItem = null;
+        }
+
+        public void RemoveInventoryItem()
+        {
             
-            if (_inventoryItems[InventoryItemType.Primary] != null)
-            {
-                ChangeCurrentItem(InventoryItemType.Primary);
-                return;
-            }
-            
-            if (_inventoryItems[InventoryItemType.Secondary] != null)
-            {
-                ChangeCurrentItem(InventoryItemType.Secondary);
-                return;
-            }
-            
-            ChangeCurrentItem(InventoryItemType.Melee);
         }
     }
 }

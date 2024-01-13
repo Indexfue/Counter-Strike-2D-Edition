@@ -1,6 +1,5 @@
 ﻿using System;
 using Player;
-using Unity.VisualScripting;
 using UnityEngine;
 using Weapons.Recoil;
 using Random = UnityEngine.Random;

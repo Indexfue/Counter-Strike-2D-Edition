@@ -5,11 +5,11 @@ namespace Utilities.Grenades
 {
     public class SmokeGrenade : Grenade
     {
-        [SerializeField] private Smoke _smokePrefab;
+        [SerializeField] private Smoke smokePrefab;
 
         protected override void Explode()
         {
-            Instantiate(_smokePrefab, transform.position, Quaternion.identity);
+            Instantiate(smokePrefab, transform.position, Quaternion.identity);
         }
     }
 }

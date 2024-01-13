@@ -5,23 +5,26 @@ using Interfaces;
 using Player;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Utilities.Grenades
 {
-    public class GrenadeInventoryItems : MonoBehaviour, IInventoryItem
+    public class GrenadeInventory : MonoBehaviour, IInventoryItem
     {
-        [SerializeField] private Transform _throwPosition;
-        [SerializeField] private SerializableDictionary<GrenadeType, GrenadeInventoryItem> _grenades;
-        [SerializeField] private GrenadeInventoryItem _currentSelectedGrenade;
+        [SerializeField] private Transform throwPosition;
+        [SerializeField] private SerializableDictionary<GrenadeType, GrenadeInventoryItem> grenades;
+        [SerializeField] private GrenadeInventoryItem currentSelectedGrenade;
 
         private bool _leftClicked;
         private bool _rightClicked;
 
-        public GrenadeInventoryItem CurrentSelectedGrenade => _currentSelectedGrenade;
+        public GrenadeInventoryItem CurrentSelectedGrenade => currentSelectedGrenade;
+
+        public bool IsEmpty => grenades.Values.All(e => e.CurrentCapacity == 0);
 
         private void Start()
         {
-            _grenades = new SerializableDictionary<GrenadeType, GrenadeInventoryItem>()
+            grenades = new SerializableDictionary<GrenadeType, GrenadeInventoryItem>()
             {
                 [GrenadeType.Flash] = new(Resources.Load("Utilities/Grenades/Flashbang Grenade").GameObject(), GrenadeType.Flash, 2),
                 [GrenadeType.Explosion] = new(Resources.Load("Utilities/Grenades/Explosion Grenade").GameObject(), GrenadeType.Explosion, 1),
@@ -29,7 +32,7 @@ namespace Utilities.Grenades
                 [GrenadeType.Fire] = new(Resources.Load("Utilities/Grenades/Fire Grenade").GameObject(), GrenadeType.Fire, 1)
             };
 
-            _currentSelectedGrenade = _grenades[GrenadeType.Flash];
+            currentSelectedGrenade = grenades[GrenadeType.Flash];
             SwitchGrenade();
         }
 
@@ -69,13 +72,13 @@ namespace Utilities.Grenades
 
         private void UseSelectedGrenade(GrenadeFlightMode flightMode)
         {
-            _currentSelectedGrenade.Use(_throwPosition, flightMode);
+            currentSelectedGrenade.Use(throwPosition, flightMode);
         }
 
         private void SwitchGrenade()
         {
-            _grenades[_currentSelectedGrenade.GrenadeType] = _currentSelectedGrenade;
-            _currentSelectedGrenade = SetNextGrenade(_currentSelectedGrenade);
+            grenades[currentSelectedGrenade.GrenadeType] = currentSelectedGrenade;
+            currentSelectedGrenade = SetNextGrenade(currentSelectedGrenade);
         }
 
         private GrenadeInventoryItem SetNextGrenade(GrenadeInventoryItem currentSelectedGrenade)
@@ -83,9 +86,9 @@ namespace Utilities.Grenades
             //TODO: CurrentCapacity = 0
             int currentGrenadeIndex = GetCurrentGrenadeIndex();
 
-            for (int i = currentGrenadeIndex + 1; i <= currentGrenadeIndex + _grenades.Keys.Count; i++)
+            for (int i = currentGrenadeIndex + 1; i <= currentGrenadeIndex + grenades.Keys.Count; i++)
             {
-                GrenadeInventoryItem nextGrenade = _grenades.Values.ElementAt(i % _grenades.Keys.Count);
+                GrenadeInventoryItem nextGrenade = grenades.Values.ElementAt(i % grenades.Keys.Count);
 
                 if (currentSelectedGrenade.GrenadeType == nextGrenade.GrenadeType || nextGrenade.CurrentCapacity == 0)
                 {
@@ -100,9 +103,9 @@ namespace Utilities.Grenades
 
         private int GetCurrentGrenadeIndex()
         {
-            for (int i = 0; i < _grenades.Keys.Count; i++)
+            for (int i = 0; i < grenades.Keys.Count; i++)
             {
-                if (_currentSelectedGrenade.Prefab == _grenades.Values.ElementAt(i).Prefab)
+                if (currentSelectedGrenade.Prefab == grenades.Values.ElementAt(i).Prefab)
                 {
                     return i;
                 }

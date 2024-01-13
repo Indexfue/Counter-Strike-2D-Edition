@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Effects;
-using Player.Effects;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -9,8 +7,8 @@ namespace Utilities.Grenades
 {
     public sealed class FlashGrenade : Grenade
     {
-        [SerializeField] private float _baseFlashTime;
-        [SerializeField] private float _flashRadius;
+        [SerializeField] private float baseFlashTime;
+        [SerializeField] private float flashRadius;
 
         public void Initialize()
         {
@@ -28,7 +26,7 @@ namespace Utilities.Grenades
             Collider[] targetsInFlashRadius = new Collider[32];
             HashSet<FlashedTarget> flashedTargets = new HashSet<FlashedTarget>();
 
-            if (Physics.OverlapSphereNonAlloc(transform.position, _flashRadius, targetsInFlashRadius, _targetMask) > 0)
+            if (Physics.OverlapSphereNonAlloc(transform.position, flashRadius, targetsInFlashRadius, targetMask) > 0)
             {
                 foreach (var target in targetsInFlashRadius)
                 {
@@ -37,7 +35,7 @@ namespace Utilities.Grenades
                     Vector3 directionToTarget = (target.transform.position - transform.position).normalized;
                     float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
 
-                    if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, _obstacleMask))
+                    if (!Physics.Raycast(transform.position, directionToTarget, distanceToTarget, obstacleMask))
                     {
                         var flashTime = GetFlashTimeByTargetRotation(target.gameObject.transform);
                         flashedTargets.Add(new FlashedTarget(target.gameObject, flashTime));
@@ -63,7 +61,7 @@ namespace Utilities.Grenades
 
         private float GetFlashTimeByTargetRotation(Transform target)
         {
-            return _baseFlashTime * GetFlashRateByTargetRotation(target);
+            return baseFlashTime * GetFlashRateByTargetRotation(target);
         }
 
         private float GetFlashRateByTargetRotation(Transform target)

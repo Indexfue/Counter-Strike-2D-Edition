@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using Player;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Utilities.Grenades
@@ -11,8 +10,8 @@ namespace Utilities.Grenades
     [RequireComponent(typeof(Collider))]
     public sealed class GrenadeFlightLogic : MonoBehaviour
     {
-        [SerializeField] private float _baseFlySpeed;
-        [SerializeField, Range(0, 1f)] private float _ricochetFlySpeedReduceRate;
+        [SerializeField] private float baseFlySpeed;
+        [SerializeField, Range(0, 1f)] private float ricochetFlySpeedReduceRate;
 
         private float _currentFlySpeed;
         private Rigidbody _rigidbody;
@@ -41,7 +40,7 @@ namespace Utilities.Grenades
             }
         }
 
-        private void SetSpeedByObstacleRicochet() => _currentFlySpeed *= (1 - _ricochetFlySpeedReduceRate);
+        private void SetSpeedByObstacleRicochet() => _currentFlySpeed *= (1 - ricochetFlySpeedReduceRate);
 
         private IEnumerator SetSpeedByTime()
         {
@@ -52,7 +51,7 @@ namespace Utilities.Grenades
             }
         }
 
-        private void SetFlySpeed(GrenadeFlightMode flightMode) => _currentFlySpeed = _baseFlySpeed * ((float)flightMode / 10f);
+        private void SetFlySpeed(GrenadeFlightMode flightMode) => _currentFlySpeed = baseFlySpeed * ((float)flightMode / 10f);
 
         private Vector3 GetNextFlyTrajectory(LayerMask obstacleLayer)
         {

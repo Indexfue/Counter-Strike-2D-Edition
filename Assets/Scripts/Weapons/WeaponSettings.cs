@@ -1,6 +1,4 @@
-﻿using System;
-using Player;
-using Player.UI.Weapons;
+﻿using Player;
 using UnityEngine;
 
 namespace Weapons
@@ -9,58 +7,47 @@ namespace Weapons
     public class WeaponSettings : ScriptableObject
     {
         [Header("Capacity/Duration")]
-        [SerializeField] private int _maxCapacity;
-        [SerializeField] private float _reloadDuration;
-        [SerializeField] private float _coolingWeaponDuration;
+        [SerializeField] private int maxCapacity;
+        [SerializeField] private float reloadDuration;
+        [SerializeField] private float coolingWeaponDuration;
         
         [Header("Weapon type")]
-        [SerializeField] private WeaponCastType _weaponCastType;
-        [SerializeField] private WeaponType _weaponType;
+        [SerializeField] private WeaponCastType weaponCastType;
+        [SerializeField] private InventoryItemType inventoryItemType;
 
         [Header("Shooting")]
-        [SerializeField] private int _damage;
-        [SerializeField, Range(0, Mathf.Infinity)] private float _shootDistance;
-        [SerializeField] private float _shootDelay;
-        [SerializeField] private float _shotsPerSecond;
-        [SerializeField] private bool _canClampShooting;
-        [SerializeField] private WeaponBallistics _weaponBallistics;
+        [SerializeField] private int damage;
+        [SerializeField, Range(0, Mathf.Infinity)] private float shootDistance;
+        [SerializeField] private float shootDelay;
+        [SerializeField] private float shotsPerSecond;
+        [SerializeField] private bool canClampShooting;
+        [SerializeField] private WeaponBallistics weaponBallistics;
         
-        [Header("Prefab")]
-        [SerializeField] private GameObject _prefab;
-        [SerializeField] private Transform _shootPoint;
-        [SerializeField] private ItemViewData _viewData;
+        //[SerializeField] private ItemViewData viewData;
         
         [Header("Layer Mask")]
-        [SerializeField] private LayerMask _targetMask;
-        [SerializeField] private LayerMask _obstacleMask;
-        [SerializeField] private LayerMask _ignoreMask;
+        [SerializeField] private LayerMask targetMask;
+        [SerializeField] private LayerMask obstacleMask;
+        [SerializeField] private LayerMask ignoreMask;
 
-        public int MaxCapacity => _maxCapacity;
-        public float ReloadDuration => _reloadDuration;
-        public float CoolingWeaponDuration => _coolingWeaponDuration;
+        public int MaxCapacity => maxCapacity;
+        public float ReloadDuration => reloadDuration;
+        public float CoolingWeaponDuration => coolingWeaponDuration;
 
-        public WeaponCastType WeaponCastType => _weaponCastType;
-        public WeaponType WeaponType => _weaponType;
+        public WeaponCastType WeaponCastType => weaponCastType;
+        public InventoryItemType InventoryItemType => inventoryItemType;
 
-        public int Damage => _damage;
-        public float ShootDistance => _shootDistance;
-        public float ShootDelay => _shootDelay;
-        public float ShotsPerSecond => 1f / _shotsPerSecond;
-        public bool CanClampShooting => _canClampShooting;
-        public WeaponBallistics WeaponBallistics => _weaponBallistics;
-
-        public GameObject Prefab => _prefab;
-        public Transform ShootPoint => _shootPoint;
-        public ItemViewData ViewData => _viewData;
+        public int Damage => damage;
+        public float ShootDistance => shootDistance;
+        public float ShootDelay => shootDelay;
+        public float ShotsPerSecond => 1f / shotsPerSecond;
+        public bool CanClampShooting => canClampShooting;
+        public WeaponBallistics WeaponBallistics => weaponBallistics;
         
-        public LayerMask TargetMask => _targetMask;
-        public LayerMask ObstacleMask => _obstacleMask;
-        public LayerMask IgnoreMask => _ignoreMask;
-
-        public void Initialize(GameObject prefab, Transform shootPoint)
-        {
-            _prefab = prefab;
-            _shootPoint = shootPoint;
-        }
+        //public ItemViewData ViewData => viewData;
+        
+        public LayerMask TargetMask => targetMask;
+        public LayerMask ObstacleMask => obstacleMask;
+        public LayerMask IgnoreMask => ignoreMask;
     }
 }

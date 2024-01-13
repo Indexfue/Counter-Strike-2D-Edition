@@ -1,23 +1,23 @@
 ﻿using System.Collections;
-using Player.UI.Weapons;
+using Interfaces;
 using UnityEngine;
 
 namespace Utilities.Grenades
 {
     [RequireComponent(typeof(GrenadeFlightLogic))]
-    public abstract class Grenade : Utility
+    public abstract class Grenade : MonoBehaviour, IInventoryItem
     {
-        [SerializeField] protected GrenadeType _grenadeType;
-        [SerializeField] protected float _explosionTime;
-        [SerializeField] protected LayerMask _targetMask;
-        [SerializeField] protected LayerMask _obstacleMask;
+        [SerializeField] protected GrenadeType grenadeType;
+        [SerializeField] protected float explosionTime;
+        [SerializeField] protected LayerMask targetMask;
+        [SerializeField] protected LayerMask obstacleMask;
 
-        [SerializeField] protected GrenadeFlightLogic _flightLogic;
+        [SerializeField] protected GrenadeFlightLogic flightLogic;
 
-        [SerializeField] protected Texture _icon;
+        [SerializeField] protected Texture icon;
 
-        public GrenadeType GrenadeType => _grenadeType;
-        public Texture Icon => _icon;
+        public GrenadeType GrenadeType => grenadeType;
+        public Texture Icon => icon;
 
         private void Start()
         {
@@ -26,7 +26,7 @@ namespace Utilities.Grenades
 
         protected IEnumerator ExplodeRoutine()
         {
-            yield return new WaitForSeconds(_explosionTime);
+            yield return new WaitForSeconds(explosionTime);
             Explode();
             Destroy(gameObject);
         }
@@ -35,7 +35,17 @@ namespace Utilities.Grenades
 
         public virtual void Use(GrenadeFlightMode flightMode, Transform thrower)
         {
-            _flightLogic.Fly(flightMode, thrower);
+            flightLogic.Fly(flightMode, thrower);
+        }
+
+        public void Select()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Deselect()
+        {
+            gameObject.SetActive(false);
         }
     }
 }
