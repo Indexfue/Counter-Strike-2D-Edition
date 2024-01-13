@@ -1,5 +1,4 @@
-﻿using Player.UI.Weapons;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Weapons
 {
@@ -26,7 +25,7 @@ namespace Weapons
         [Header("Prefab")]
         [SerializeField] private GameObject prefab;
         [SerializeField] private Transform shootPoint;
-        [SerializeField] private ItemViewData viewData;
+        //[SerializeField] private ItemViewData viewData;
         
         [Header("Layer Mask")]
         [SerializeField] private LayerMask targetMask;
@@ -49,7 +48,7 @@ namespace Weapons
 
         public GameObject Prefab => prefab;
         public Transform ShootPoint => shootPoint;
-        public ItemViewData ViewData => viewData;
+        //public ItemViewData ViewData => viewData;
         
         public LayerMask TargetMask => targetMask;
         public LayerMask ObstacleMask => obstacleMask;
