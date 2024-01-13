@@ -10,7 +10,7 @@ namespace Weapons
 {
     public class Weapon : MonoBehaviour, IInventoryItem
     {
-        [SerializeField] private WeaponType weaponType;
+        [SerializeField] private Transform shootPoint;
         [SerializeField] private WeaponSettings settings;
         //TODO: Rewrite this below
         [SerializeField] private int currentCapacity;
@@ -30,19 +30,23 @@ namespace Weapons
             get => settings;
             set
             {
-                if (value.WeaponType != weaponType)
-                {
-                    throw new ArgumentException("Can't set weapon with different type");
-                }
-
                 settings = value;
+                InitializeShootingLogic();
             }
         }
-
-        private void Start()
+        
+        private void OnEnable()
         {
-            Settings.Initialize(gameObject, transform);
-            InitializeShootingLogic();
+            EventManager.Subscribe<FireKeyPressedEventArgs>(OnFireKeyPressed);
+            EventManager.Subscribe<ReloadKeyPressedEventArgs>(OnReloadKeyPressed);
+            EventManager.Subscribe<FireKeyUnpressedEventArgs>(OnFireKeyUnpressed);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.Unsubscribe<FireKeyPressedEventArgs>(OnFireKeyPressed);
+            EventManager.Unsubscribe<ReloadKeyPressedEventArgs>(OnReloadKeyPressed);
+            EventManager.Unsubscribe<FireKeyUnpressedEventArgs>(OnFireKeyUnpressed);
         }
 
         protected void OnFireKeyPressed(FireKeyPressedEventArgs args)
@@ -84,9 +88,9 @@ namespace Weapons
         private void PerformAttack()
         {
             GameObject playerInstance = gameObject.GetComponentInParent(typeof(PlayerMovement)).gameObject;
-            _shootingLogic.Shoot(Settings.ShootPoint, Settings, _continiousShotCount, playerInstance);
+            _shootingLogic.Shoot(shootPoint, Settings, _continiousShotCount, playerInstance);
 
-            if (Settings.WeaponType != WeaponType.Melee)
+            if (Settings.InventoryItemType != InventoryItemType.Melee)
             {
                 currentCapacity -= 1;
                 _continiousShotCount = Mathf.Clamp(_continiousShotCount + 1, 0, Settings.MaxCapacity);
@@ -96,7 +100,7 @@ namespace Weapons
         
         private bool TryAttack()
         {
-            if (Settings.WeaponType != WeaponType.Melee && currentCapacity == 0) return false;
+            if (Settings.InventoryItemType != InventoryItemType.Melee && currentCapacity == 0) return false;
 
             PerformAttack();
             return true;
