@@ -35,6 +35,9 @@ public sealed class InputHandler : MonoBehaviour
         _inputSettings.Player.Reload.started += OnReloadKeyPressed;
 
         _inputSettings.Player.Inventory.started += OnWeaponPickKeyPressed;
+
+        _inputSettings.Player.CameraOffset.performed += OnCameraOffsetKeyPressed;
+        _inputSettings.Player.CameraOffset.canceled += OnCameraOffsetKeyUnpressed;
     }
 
     private void OnMovementKeyPressed(InputAction.CallbackContext callbackContext)
@@ -72,5 +75,17 @@ public sealed class InputHandler : MonoBehaviour
     {
         float keyPressed = callbackContext.ReadValue<float>();
         EventManager.RaiseEvent(new ItemSelectKeyPressedEventArgs(keyPressed));
+    }
+
+    private void OnCameraOffsetKeyPressed(InputAction.CallbackContext callbackContext)
+    {
+        EventManager.RaiseEvent(new CameraOffsetEventArgs(Configuration.BaseCameraOffsetKeyPressed, 
+                                                          Configuration.BaseCameraOffsetMoveTimeKeyPressed));
+    }
+
+    private void OnCameraOffsetKeyUnpressed(InputAction.CallbackContext callbackContext)
+    {
+        EventManager.RaiseEvent(new CameraOffsetEventArgs(Configuration.BaseCameraOffsetKeyUnpressed, 
+                                                          Configuration.BaseCameraOffsetMoveTimeKeyUnpressed));
     }
 }

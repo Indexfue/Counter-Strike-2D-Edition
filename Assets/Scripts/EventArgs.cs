@@ -23,4 +23,26 @@ namespace Player
 
         public MovementKeyPressedEventArgs(Vector3 movementDirection) => MovementDirection = movementDirection;
     }
+
+    public sealed class CameraOffsetEventArgs : EventArgs
+    {
+        public Vector3 OffsetValue { get; }
+        public float MoveTime { get; }
+
+        public CameraOffsetEventArgs(Vector3 baseOffsetValue, float baseMoveTime, Vector3 offsetValue = default(Vector3), float moveTime = 0f)
+        {
+            if (offsetValue == default(Vector3))
+            {
+                offsetValue = baseOffsetValue;
+            }
+
+            if (moveTime == 0f)
+            {
+                moveTime = baseMoveTime;
+            }
+
+            OffsetValue = offsetValue;
+            MoveTime = moveTime;
+        }
+    }
 }
