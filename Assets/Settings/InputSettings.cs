@@ -46,7 +46,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Secondary Fire"",
+                    ""name"": ""SecondaryFire"",
                     ""type"": ""Button"",
                     ""id"": ""2129ef9a-4824-4466-b970-311166c30d95"",
                     ""expectedControlType"": ""Button"",
@@ -67,6 +67,15 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""name"": ""Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""bdce4759-32ff-4c98-8a03-ade5203e8292"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""CameraOffset"",
+                    ""type"": ""Button"",
+                    ""id"": ""ca8a5c68-7b9a-4127-8f94-ae21aac9d39c"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -224,7 +233,18 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Secondary Fire"",
+                    ""action"": ""SecondaryFire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""88d9c44d-8b0a-4a5d-bf8c-51173add179c"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraOffset"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -243,9 +263,10 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
-        m_Player_SecondaryFire = m_Player.FindAction("Secondary Fire", throwIfNotFound: true);
+        m_Player_SecondaryFire = m_Player.FindAction("SecondaryFire", throwIfNotFound: true);
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
+        m_Player_CameraOffset = m_Player.FindAction("CameraOffset", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -312,6 +333,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SecondaryFire;
     private readonly InputAction m_Player_Reload;
     private readonly InputAction m_Player_Inventory;
+    private readonly InputAction m_Player_CameraOffset;
     public struct PlayerActions
     {
         private @InputSettings m_Wrapper;
@@ -321,6 +343,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         public InputAction @SecondaryFire => m_Wrapper.m_Player_SecondaryFire;
         public InputAction @Reload => m_Wrapper.m_Player_Reload;
         public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
+        public InputAction @CameraOffset => m_Wrapper.m_Player_CameraOffset;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -345,6 +368,9 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
             @Inventory.started += instance.OnInventory;
             @Inventory.performed += instance.OnInventory;
             @Inventory.canceled += instance.OnInventory;
+            @CameraOffset.started += instance.OnCameraOffset;
+            @CameraOffset.performed += instance.OnCameraOffset;
+            @CameraOffset.canceled += instance.OnCameraOffset;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -364,6 +390,9 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
             @Inventory.started -= instance.OnInventory;
             @Inventory.performed -= instance.OnInventory;
             @Inventory.canceled -= instance.OnInventory;
+            @CameraOffset.started -= instance.OnCameraOffset;
+            @CameraOffset.performed -= instance.OnCameraOffset;
+            @CameraOffset.canceled -= instance.OnCameraOffset;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -397,5 +426,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         void OnSecondaryFire(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);
+        void OnCameraOffset(InputAction.CallbackContext context);
     }
 }
