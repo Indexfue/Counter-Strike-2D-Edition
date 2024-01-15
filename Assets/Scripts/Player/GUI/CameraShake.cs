@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Cinemachine;
 using UnityEngine;
@@ -14,6 +15,21 @@ namespace Player.GUI
             _cinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();
         }
 
+        private void OnEnable()
+        {
+            EventManager.Subscribe<CameraShakeEventArgs>(ShakeCamera);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.Unsubscribe<CameraShakeEventArgs>(ShakeCamera);
+        }
+
+        public void ShakeCamera(CameraShakeEventArgs args)
+        {
+            ShakeCamera(args.AmplitudeGain, args.FrequencyGain, args.ShakeTime, args.StopShakeTime);
+        }
+
         public void ShakeCamera(float amplitudeGain, float frequencyGain, float shakeTime, float stopShakeTime = 1f)
         {
             CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = _cinemachineVirtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
@@ -26,11 +42,6 @@ namespace Player.GUI
 
             _coroutine = StopShakingAfterTime(stopShakeTime);
             StartCoroutine(StopShakingAfterTime(stopShakeTime));
-        }
-
-        private void SubscribeEvent()
-        {
-            
         }
 
         private IEnumerator StopShakingAfterTime(float stopShakeTime = 1f)
@@ -47,6 +58,9 @@ namespace Player.GUI
                 cinemachineBasicMultiChannelPerlin.m_FrequencyGain = Mathf.Lerp(currentFrequency, 0, Mathf.Pow(i / smoothStepCount, stopShakeTime));
                 yield return new WaitForSeconds(stopShakeTime / smoothStepCount);
             }
+
+            cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
+            cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
         }
     }
 }

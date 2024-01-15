@@ -89,6 +89,9 @@ namespace Weapons
         {
             GameObject playerInstance = gameObject.GetComponentInParent(typeof(PlayerMovement)).gameObject;
             _shootingLogic.Shoot(shootPoint, Settings, _continiousShotCount, playerInstance);
+            
+            EventManager.RaiseEvent(new CameraShakeEventArgs(playerInstance,
+                Settings.AmplitudeGain, Settings.FrequencyGain, Settings.ShakeTime, Settings.StopShakeTime));
 
             if (Settings.InventoryItemType != InventoryItemType.Melee)
             {

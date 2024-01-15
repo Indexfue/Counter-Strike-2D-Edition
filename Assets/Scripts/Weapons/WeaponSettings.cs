@@ -30,6 +30,12 @@ namespace Weapons
         [SerializeField] private LayerMask obstacleMask;
         [SerializeField] private LayerMask ignoreMask;
 
+        [Header("Camera Shaking")]
+        [SerializeField] private float amplitudeGain;
+        [SerializeField] private float frequencyGain;
+        [SerializeField] private float shakeTime;
+        [SerializeField] private float stopShakeTime;
+
         public int MaxCapacity => maxCapacity;
         public float ReloadDuration => reloadDuration;
         public float CoolingWeaponDuration => coolingWeaponDuration;
@@ -49,5 +55,10 @@ namespace Weapons
         public LayerMask TargetMask => targetMask;
         public LayerMask ObstacleMask => obstacleMask;
         public LayerMask IgnoreMask => ignoreMask;
+
+        public float AmplitudeGain => amplitudeGain;
+        public float FrequencyGain => frequencyGain;
+        public float ShakeTime => shakeTime;
+        public float StopShakeTime => stopShakeTime;
     }
 }
