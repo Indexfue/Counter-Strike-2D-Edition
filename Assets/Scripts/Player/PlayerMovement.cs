@@ -55,7 +55,7 @@ namespace Player
 
         private void MoveCharacter()
         {
-            var direction = (transform.right * _unitVector.XSpeedRate) + (transform.forward * _unitVector.YSpeedRate);
+            var direction = (Vector3.right * _unitVector.XSpeedRate) + (Vector3.forward * _unitVector.YSpeedRate);
             _characterController.Move(direction * baseMovementSpeed);
         }
     }
