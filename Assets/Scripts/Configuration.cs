@@ -13,5 +13,27 @@ namespace Player
         public static readonly Vector3 BaseCameraRotation = new Vector3(90f, 0f, 0f);
 
         #endregion
+
+        #region Component Variables
+
+        // Stamina
+        public static readonly float BaseStaminaValue = 100f;
+        public static readonly float StaminaPerLevel = 20f;
+        public static readonly float StaminaReducingPerSecond = 20f;
+        public static readonly float DashStaminaReduce = 15f;
+        public static readonly float StaminaRegenerationPerSecond = 25f;
+        public static readonly float StaminaRegerationStartTimer = 1.5f;
+        // End Stamina
+
+        #endregion
+
+        #region Player Variables
+
+        // Speed
+        public static readonly float BaseMovementSpeed = 0.1f;
+        public static readonly float BaseSprintSpeed = 0.15f;
+        public static readonly float BaseDashSpeed = 0.25f;
+
+        #endregion
     }
 }
