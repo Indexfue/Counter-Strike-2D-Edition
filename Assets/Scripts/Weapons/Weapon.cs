@@ -49,20 +49,26 @@ namespace Weapons
             EventManager.Unsubscribe<FireKeyEventArgs>(OnFireKeyUnpressed);
         }
 
-        protected void OnFireKeyPressed(FireKeyEventArgs args)
+        private void OnFireKeyPressed(FireKeyEventArgs args)
         {
+            if (args.Cancel)
+                return;
+            
             if (gameObject.activeSelf)
                 StartRoutineAsVariable(AttackingRoutine(), ref _attackingRoutine);
         } 
         
-        protected void OnReloadKeyPressed(ReloadKeyPressedEventArgs args)
+        private void OnReloadKeyPressed(ReloadKeyPressedEventArgs args)
         {
             if (gameObject.activeSelf)
                 StartRoutineAsVariable(ReloadRoutine(), ref _reloadingRoutine);
         }
 
-        protected void OnFireKeyUnpressed(FireKeyEventArgs args)
+        private void OnFireKeyUnpressed(FireKeyEventArgs args)
         {
+            if (!args.Cancel)
+                return;
+            
             if (gameObject.activeSelf)
             {
                 StopRoutineAsVariable(ref _attackingRoutine);

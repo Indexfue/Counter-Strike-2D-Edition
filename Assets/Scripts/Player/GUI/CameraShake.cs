@@ -9,10 +9,12 @@ namespace Player.GUI
     {
         private IEnumerator _coroutine;
         private CinemachineVirtualCamera _cinemachineVirtualCamera;
+        private Camera _mainCamera;
 
         private void Awake()
         {
             _cinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();
+            _mainCamera = GetComponentInParent<Camera>();
         }
 
         private void OnEnable()
@@ -61,6 +63,7 @@ namespace Player.GUI
 
             cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = 0;
             cinemachineBasicMultiChannelPerlin.m_FrequencyGain = 0;
+            _mainCamera.transform.eulerAngles = Configuration.BaseCameraRotation;
         }
     }
 }
