@@ -73,15 +73,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""CameraOffset"",
-                    ""type"": ""Button"",
-                    ""id"": ""ca8a5c68-7b9a-4127-8f94-ae21aac9d39c"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
                     ""name"": ""Mouse"",
                     ""type"": ""Value"",
                     ""id"": ""56f07cfe-0b3d-4017-931f-25311957cc83"",
@@ -248,17 +239,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""88d9c44d-8b0a-4a5d-bf8c-51173add179c"",
-                    ""path"": ""<Mouse>/rightButton"",
-                    ""interactions"": ""Press(behavior=2)"",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""CameraOffset"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""39356b9d-19d2-4626-8f61-f1727d3acd57"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
@@ -286,7 +266,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         m_Player_SecondaryFire = m_Player.FindAction("SecondaryFire", throwIfNotFound: true);
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
-        m_Player_CameraOffset = m_Player.FindAction("CameraOffset", throwIfNotFound: true);
         m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
     }
 
@@ -354,7 +333,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SecondaryFire;
     private readonly InputAction m_Player_Reload;
     private readonly InputAction m_Player_Inventory;
-    private readonly InputAction m_Player_CameraOffset;
     private readonly InputAction m_Player_Mouse;
     public struct PlayerActions
     {
@@ -365,7 +343,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         public InputAction @SecondaryFire => m_Wrapper.m_Player_SecondaryFire;
         public InputAction @Reload => m_Wrapper.m_Player_Reload;
         public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
-        public InputAction @CameraOffset => m_Wrapper.m_Player_CameraOffset;
         public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -391,9 +368,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
             @Inventory.started += instance.OnInventory;
             @Inventory.performed += instance.OnInventory;
             @Inventory.canceled += instance.OnInventory;
-            @CameraOffset.started += instance.OnCameraOffset;
-            @CameraOffset.performed += instance.OnCameraOffset;
-            @CameraOffset.canceled += instance.OnCameraOffset;
             @Mouse.started += instance.OnMouse;
             @Mouse.performed += instance.OnMouse;
             @Mouse.canceled += instance.OnMouse;
@@ -416,9 +390,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
             @Inventory.started -= instance.OnInventory;
             @Inventory.performed -= instance.OnInventory;
             @Inventory.canceled -= instance.OnInventory;
-            @CameraOffset.started -= instance.OnCameraOffset;
-            @CameraOffset.performed -= instance.OnCameraOffset;
-            @CameraOffset.canceled -= instance.OnCameraOffset;
             @Mouse.started -= instance.OnMouse;
             @Mouse.performed -= instance.OnMouse;
             @Mouse.canceled -= instance.OnMouse;
@@ -455,7 +426,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         void OnSecondaryFire(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);
-        void OnCameraOffset(InputAction.CallbackContext context);
         void OnMouse(InputAction.CallbackContext context);
     }
 }
