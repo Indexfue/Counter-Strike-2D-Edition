@@ -47,22 +47,22 @@ public sealed class InputHandler : MonoBehaviour
 
     private void OnSecondaryFireKeyPressed(InputAction.CallbackContext callbackContext)
     {
-        EventManager.RaiseEvent(new SecondaryFireKeyEventArgs(gameObject, true));
+        EventManager.RaiseEvent(new SecondaryFireKeyEventArgs(gameObject, false));
     }
 
     private void OnSecondaryFireKeyUnpressed(InputAction.CallbackContext callbackContext)
     {
-        EventManager.RaiseEvent(new SecondaryFireKeyEventArgs(gameObject, false));
+        EventManager.RaiseEvent(new SecondaryFireKeyEventArgs(gameObject, true));
     }
 
     private void OnFireKeyPressed(InputAction.CallbackContext callbackContext)
     {
-        EventManager.RaiseEvent(new FireKeyEventArgs(gameObject, true));
+        EventManager.RaiseEvent(new FireKeyEventArgs(gameObject, false));
     }
 
     private void OnFireKeyUnpressed(InputAction.CallbackContext callbackContext)
     {
-        EventManager.RaiseEvent(new FireKeyEventArgs(gameObject, false));
+        EventManager.RaiseEvent(new FireKeyEventArgs(gameObject, true));
     }
 
     private void OnReloadKeyPressed(InputAction.CallbackContext callbackContext)
