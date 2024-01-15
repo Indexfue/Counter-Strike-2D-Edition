@@ -38,23 +38,23 @@ namespace Utilities.Grenades
 
         private void OnEnable()
         {
-            EventManager.Subscribe<FireKeyPressedEventArgs>(OnLeftButtonMousePerformed);
-            EventManager.Subscribe<SecondaryFireKeyPressedEventArgs>(OnRightButtonMousePerformed);
-            EventManager.Subscribe<FireKeyUnpressedEventArgs>(OnButtonMouseCanceled);
-            EventManager.Subscribe<SecondaryFireKeyUnpressedEventArgs>(OnButtonMouseCanceled);
+            EventManager.Subscribe<FireKeyEventArgs>(OnLeftButtonMousePerformed);
+            EventManager.Subscribe<SecondaryFireKeyEventArgs>(OnRightButtonMousePerformed);
+            EventManager.Subscribe<FireKeyEventArgs>(OnButtonMouseCanceled);
+            EventManager.Subscribe<SecondaryFireKeyEventArgs>(OnButtonMouseCanceled);
         }
 
         private void OnDisable()
         {
-            EventManager.Unsubscribe<FireKeyPressedEventArgs>(OnLeftButtonMousePerformed);
-            EventManager.Unsubscribe<SecondaryFireKeyPressedEventArgs>(OnRightButtonMousePerformed);
-            EventManager.Unsubscribe<FireKeyUnpressedEventArgs>(OnButtonMouseCanceled);
-            EventManager.Unsubscribe<SecondaryFireKeyUnpressedEventArgs>(OnButtonMouseCanceled);
+            EventManager.Unsubscribe<FireKeyEventArgs>(OnLeftButtonMousePerformed);
+            EventManager.Unsubscribe<SecondaryFireKeyEventArgs>(OnRightButtonMousePerformed);
+            EventManager.Unsubscribe<FireKeyEventArgs>(OnButtonMouseCanceled);
+            EventManager.Unsubscribe<SecondaryFireKeyEventArgs>(OnButtonMouseCanceled);
         }
 
-        private void OnLeftButtonMousePerformed(FireKeyPressedEventArgs args) => _leftClicked = true;
+        private void OnLeftButtonMousePerformed(FireKeyEventArgs args) => _leftClicked = true;
 
-        private void OnRightButtonMousePerformed(SecondaryFireKeyPressedEventArgs args) => _rightClicked = true;
+        private void OnRightButtonMousePerformed(SecondaryFireKeyEventArgs args) => _rightClicked = true;
 
         private void OnButtonMouseCanceled(EventArgs args)
         {
