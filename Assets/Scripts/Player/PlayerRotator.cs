@@ -1,25 +1,39 @@
 using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 
 namespace Player
 {
     public class PlayerRotator : MonoBehaviour
     {
-        [SerializeField, Range(0f, 1f)] private float mouseSensitivity = 1f;
+        [SerializeField] private LayerMask cursorAimMask;
 
-        private void Start()
+        public bool IsMouseRotationAllowed { get; set; } = true;
+
+        private void OnEnable()
         {
-            Cursor.lockState = CursorLockMode.Locked;
+            EventManager.Subscribe<RotationByMouseEventArgs>(OnRotationByMouse);
         }
 
-        void Update()
+        private void OnDisable()
         {
-            var x = Input.GetAxis("Mouse X");
-            var rotateValue = new Vector3(0, x * -1, 0);
+            EventManager.Unsubscribe<RotationByMouseEventArgs>(OnRotationByMouse);
+        }
 
-            transform.eulerAngles -= rotateValue;
-            transform.eulerAngles +=  rotateValue * mouseSensitivity * Time.deltaTime;
+        public void OnRotationByMouse(RotationByMouseEventArgs args)
+        {
+            if (!IsMouseRotationAllowed)
+            {
+                return;
+            }
+        
+            Ray ray = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
+            if (Physics.Raycast(ray, out RaycastHit hit, 100f, cursorAimMask))
+            {
+                Vector3 lookingPosition = new Vector3(hit.point.x, transform.position.y, hit.point.z);
+                transform.LookAt(lookingPosition);
+            }
         }
     }
 }
