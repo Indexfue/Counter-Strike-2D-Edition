@@ -46,7 +46,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Secondary Fire"",
+                    ""name"": ""SecondaryFire"",
                     ""type"": ""Button"",
                     ""id"": ""2129ef9a-4824-4466-b970-311166c30d95"",
                     ""expectedControlType"": ""Button"",
@@ -71,6 +71,15 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Mouse"",
+                    ""type"": ""Value"",
+                    ""id"": ""56f07cfe-0b3d-4017-931f-25311957cc83"",
+                    ""expectedControlType"": ""Delta"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -224,7 +233,18 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Secondary Fire"",
+                    ""action"": ""SecondaryFire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""39356b9d-19d2-4626-8f61-f1727d3acd57"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Mouse"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -243,9 +263,10 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Movement = m_Player.FindAction("Movement", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
-        m_Player_SecondaryFire = m_Player.FindAction("Secondary Fire", throwIfNotFound: true);
+        m_Player_SecondaryFire = m_Player.FindAction("SecondaryFire", throwIfNotFound: true);
         m_Player_Reload = m_Player.FindAction("Reload", throwIfNotFound: true);
         m_Player_Inventory = m_Player.FindAction("Inventory", throwIfNotFound: true);
+        m_Player_Mouse = m_Player.FindAction("Mouse", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -312,6 +333,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_SecondaryFire;
     private readonly InputAction m_Player_Reload;
     private readonly InputAction m_Player_Inventory;
+    private readonly InputAction m_Player_Mouse;
     public struct PlayerActions
     {
         private @InputSettings m_Wrapper;
@@ -321,6 +343,7 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         public InputAction @SecondaryFire => m_Wrapper.m_Player_SecondaryFire;
         public InputAction @Reload => m_Wrapper.m_Player_Reload;
         public InputAction @Inventory => m_Wrapper.m_Player_Inventory;
+        public InputAction @Mouse => m_Wrapper.m_Player_Mouse;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -345,6 +368,9 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
             @Inventory.started += instance.OnInventory;
             @Inventory.performed += instance.OnInventory;
             @Inventory.canceled += instance.OnInventory;
+            @Mouse.started += instance.OnMouse;
+            @Mouse.performed += instance.OnMouse;
+            @Mouse.canceled += instance.OnMouse;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -364,6 +390,9 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
             @Inventory.started -= instance.OnInventory;
             @Inventory.performed -= instance.OnInventory;
             @Inventory.canceled -= instance.OnInventory;
+            @Mouse.started -= instance.OnMouse;
+            @Mouse.performed -= instance.OnMouse;
+            @Mouse.canceled -= instance.OnMouse;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -397,5 +426,6 @@ public partial class @InputSettings: IInputActionCollection2, IDisposable
         void OnSecondaryFire(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
         void OnInventory(InputAction.CallbackContext context);
+        void OnMouse(InputAction.CallbackContext context);
     }
 }

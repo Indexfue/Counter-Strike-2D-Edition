@@ -35,42 +35,49 @@ public sealed class InputHandler : MonoBehaviour
         _inputSettings.Player.Reload.started += OnReloadKeyPressed;
 
         _inputSettings.Player.Inventory.started += OnWeaponPickKeyPressed;
+
+        _inputSettings.Player.Mouse.performed += OnRotationByMouse;
     }
 
     private void OnMovementKeyPressed(InputAction.CallbackContext callbackContext)
     {
         Vector3 movementDirection = callbackContext.ReadValue<Vector3>();
-        EventManager.RaiseEvent(new MovementKeyPressedEventArgs(movementDirection));
+        EventManager.RaiseEvent(new MovementKeyPressedEventArgs(gameObject, movementDirection));
     }
 
     private void OnSecondaryFireKeyPressed(InputAction.CallbackContext callbackContext)
     {
-        EventManager.RaiseEvent(new SecondaryFireKeyPressedEventArgs());
+        EventManager.RaiseEvent(new SecondaryFireKeyEventArgs(gameObject, false));
     }
 
     private void OnSecondaryFireKeyUnpressed(InputAction.CallbackContext callbackContext)
     {
-        EventManager.RaiseEvent(new SecondaryFireKeyUnpressedEventArgs());
+        EventManager.RaiseEvent(new SecondaryFireKeyEventArgs(gameObject, true));
     }
 
     private void OnFireKeyPressed(InputAction.CallbackContext callbackContext)
     {
-        EventManager.RaiseEvent(new FireKeyPressedEventArgs());
+        EventManager.RaiseEvent(new FireKeyEventArgs(gameObject, false));
     }
 
     private void OnFireKeyUnpressed(InputAction.CallbackContext callbackContext)
     {
-        EventManager.RaiseEvent(new FireKeyUnpressedEventArgs());
+        EventManager.RaiseEvent(new FireKeyEventArgs(gameObject, true));
     }
 
     private void OnReloadKeyPressed(InputAction.CallbackContext callbackContext)
     {
-        EventManager.RaiseEvent(new ReloadKeyPressedEventArgs());
+        EventManager.RaiseEvent(new ReloadKeyPressedEventArgs(gameObject));
     }
 
     private void OnWeaponPickKeyPressed(InputAction.CallbackContext callbackContext)
     {
         float keyPressed = callbackContext.ReadValue<float>();
-        EventManager.RaiseEvent(new ItemSelectKeyPressedEventArgs(keyPressed));
+        EventManager.RaiseEvent(new ItemSelectKeyPressedEventArgs(gameObject, keyPressed));
+    }
+
+    private void OnRotationByMouse(InputAction.CallbackContext callbackContext)
+    {
+        EventManager.RaiseEvent(new RotationByMouseEventArgs(gameObject));
     }
 }

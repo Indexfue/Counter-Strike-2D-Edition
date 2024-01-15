@@ -37,32 +37,38 @@ namespace Weapons
         
         private void OnEnable()
         {
-            EventManager.Subscribe<FireKeyPressedEventArgs>(OnFireKeyPressed);
+            EventManager.Subscribe<FireKeyEventArgs>(OnFireKeyPressed);
             EventManager.Subscribe<ReloadKeyPressedEventArgs>(OnReloadKeyPressed);
-            EventManager.Subscribe<FireKeyUnpressedEventArgs>(OnFireKeyUnpressed);
+            EventManager.Subscribe<FireKeyEventArgs>(OnFireKeyUnpressed);
         }
 
         private void OnDisable()
         {
-            EventManager.Unsubscribe<FireKeyPressedEventArgs>(OnFireKeyPressed);
+            EventManager.Unsubscribe<FireKeyEventArgs>(OnFireKeyPressed);
             EventManager.Unsubscribe<ReloadKeyPressedEventArgs>(OnReloadKeyPressed);
-            EventManager.Unsubscribe<FireKeyUnpressedEventArgs>(OnFireKeyUnpressed);
+            EventManager.Unsubscribe<FireKeyEventArgs>(OnFireKeyUnpressed);
         }
 
-        protected void OnFireKeyPressed(FireKeyPressedEventArgs args)
+        private void OnFireKeyPressed(FireKeyEventArgs args)
         {
+            if (args.Cancel)
+                return;
+            
             if (gameObject.activeSelf)
                 StartRoutineAsVariable(AttackingRoutine(), ref _attackingRoutine);
         } 
         
-        protected void OnReloadKeyPressed(ReloadKeyPressedEventArgs args)
+        private void OnReloadKeyPressed(ReloadKeyPressedEventArgs args)
         {
             if (gameObject.activeSelf)
                 StartRoutineAsVariable(ReloadRoutine(), ref _reloadingRoutine);
         }
 
-        protected void OnFireKeyUnpressed(FireKeyUnpressedEventArgs args)
+        private void OnFireKeyUnpressed(FireKeyEventArgs args)
         {
+            if (!args.Cancel)
+                return;
+            
             if (gameObject.activeSelf)
             {
                 StopRoutineAsVariable(ref _attackingRoutine);
@@ -89,6 +95,9 @@ namespace Weapons
         {
             GameObject playerInstance = gameObject.GetComponentInParent(typeof(PlayerMovement)).gameObject;
             _shootingLogic.Shoot(shootPoint, Settings, _continiousShotCount, playerInstance);
+            
+            EventManager.RaiseEvent(new CameraShakeEventArgs(playerInstance,
+                Settings.AmplitudeGain, Settings.FrequencyGain, Settings.ShakeTime, Settings.StopShakeTime));
 
             if (Settings.InventoryItemType != InventoryItemType.Melee)
             {
