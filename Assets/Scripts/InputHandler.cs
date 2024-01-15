@@ -38,6 +38,8 @@ public sealed class InputHandler : MonoBehaviour
 
         _inputSettings.Player.CameraOffset.performed += OnCameraOffsetKeyPressed;
         _inputSettings.Player.CameraOffset.canceled += OnCameraOffsetKeyUnpressed;
+
+        _inputSettings.Player.Mouse.performed += OnRotationByMouse;
     }
 
     private void OnMovementKeyPressed(InputAction.CallbackContext callbackContext)
@@ -87,5 +89,10 @@ public sealed class InputHandler : MonoBehaviour
     {
         EventManager.RaiseEvent(new CameraOffsetEventArgs(gameObject, Configuration.BaseCameraOffsetKeyUnpressed, 
                                                           Configuration.BaseCameraOffsetMoveTimeKeyUnpressed));
+    }
+
+    private void OnRotationByMouse(InputAction.CallbackContext callbackContext)
+    {
+        EventManager.RaiseEvent(new RotationByMouseEventArgs(gameObject));
     }
 }
