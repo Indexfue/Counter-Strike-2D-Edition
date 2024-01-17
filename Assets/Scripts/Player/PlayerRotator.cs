@@ -11,17 +11,7 @@ namespace Player
 
         public bool IsMouseRotationAllowed { get; set; } = true;
 
-        private void OnEnable()
-        {
-            EventManager.Subscribe<RotationByMouseEventArgs>(OnRotationByMouse);
-        }
-
-        private void OnDisable()
-        {
-            EventManager.Unsubscribe<RotationByMouseEventArgs>(OnRotationByMouse);
-        }
-
-        public void OnRotationByMouse(RotationByMouseEventArgs args)
+        public void OnRotationByMouse()
         {
             if (!IsMouseRotationAllowed)
             {
@@ -34,6 +24,11 @@ namespace Player
                 Vector3 lookingPosition = new Vector3(hit.point.x, transform.position.y, hit.point.z);
                 transform.LookAt(lookingPosition);
             }
+        }
+
+        private void Update()
+        {
+            OnRotationByMouse();
         }
     }
 }
