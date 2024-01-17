@@ -21,6 +21,11 @@ namespace Components
             set
             {
                 _currentStamina = Mathf.Clamp(value, 0, MaxStaminaByLevel);
+
+                if (value < _currentStamina)
+                {
+                    _regenerationStartTimer = 0f;
+                }
                 Debug.Log($"Current stamina = {_currentStamina}");
             }
         }
@@ -59,7 +64,7 @@ namespace Components
         {
             if (_coroutine is null && CurrentStamina < MaxStaminaByLevel)
             {
-                _regenerationStartTimer += Time.fixedDeltaTime;
+                _regenerationStartTimer += Time.deltaTime;
                 if (_regenerationStartTimer > Configuration.StaminaRegerationStartTimer)
                 {
                     _regenerationStartTimer = 0f;
