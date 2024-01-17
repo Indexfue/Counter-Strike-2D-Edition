@@ -243,7 +243,7 @@ namespace Weapons
 
                 if (playerMovement is not null)
                 {
-                    spreadRadiusLength += playerMovement.CurrentMovementSpeed * Settings.WeaponBallistics.SpreadRadius;
+                    spreadRadiusLength += playerMovement.CurrentUnitSpeed * Settings.WeaponBallistics.SpreadRadius;
                 }
             }
             Vector3 spreadCubeSize = new Vector3(spreadRadiusLength, 0.1f, 0.1f);

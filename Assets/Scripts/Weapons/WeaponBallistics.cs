@@ -26,7 +26,7 @@ namespace Weapons
             //TODO: Make spread normal
             if (playerInstance.TryGetComponent(out PlayerMovement playerMovement))
             {
-                float currentSpreadMovementRate = 1 + playerMovement.CurrentMovementSpeed * spreadMovementRate;
+                float currentSpreadMovementRate = 1 + playerMovement.CurrentUnitSpeed * spreadMovementRate;
                 direction += new Vector3(GetRandomPoint(currentSpreadMovementRate), 0, GetRandomPoint(currentSpreadMovementRate));
             }
         }

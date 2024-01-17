@@ -37,6 +37,9 @@ public sealed class InputHandler : MonoBehaviour
         _inputSettings.Player.Inventory.started += OnWeaponPickKeyPressed;
 
         _inputSettings.Player.Mouse.performed += OnRotationByMouse;
+
+        _inputSettings.Player.Sprint.performed += OnSprintKeyPressed;
+        _inputSettings.Player.Sprint.canceled += OnSprintKeyUnpressed;
     }
 
     private void OnMovementKeyPressed(InputAction.CallbackContext callbackContext)
@@ -79,5 +82,15 @@ public sealed class InputHandler : MonoBehaviour
     private void OnRotationByMouse(InputAction.CallbackContext callbackContext)
     {
         EventManager.RaiseEvent(new RotationByMouseEventArgs(gameObject));
+    }
+
+    private void OnSprintKeyPressed(InputAction.CallbackContext callbackContext)
+    {
+        EventManager.RaiseEvent(new SprintKeyEventArgs(gameObject, false));
+    }
+
+    private void OnSprintKeyUnpressed(InputAction.CallbackContext callbackContext)
+    {
+        EventManager.RaiseEvent(new SprintKeyEventArgs(gameObject, true));
     }
 }
