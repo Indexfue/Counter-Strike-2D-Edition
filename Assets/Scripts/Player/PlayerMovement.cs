@@ -170,10 +170,11 @@ namespace Player
                 return;
             
             _movementDirection = Vector3.right * _unitVector.XSpeedRate + Vector3.forward * _unitVector.YSpeedRate;
+            Debug.Log(_movementDirection);
 
             if (_movementDirection != Vector3.zero)
             {
-                _characterController.Move(_movementDirection * _currentMovementSpeed);
+                _characterController.Move(_movementDirection.normalized * _currentMovementSpeed);
             }
             else
             {
@@ -201,10 +202,8 @@ namespace Player
             _y = y;
         }
         
-        public void UpdateSpeed(Vector3 direction)
+        public void UpdateSpeed(Vector3 rawDirection)
         {
-            // rawDirection to direction (NOT normalized);
-            Vector3 rawDirection = direction.normalized;
             int newX = rawDirection.x == 0 && X != 0 ? (int)(X * -1.0f / Mathf.Abs(X)) : Mathf.RoundToInt(rawDirection.x);
             int newY = rawDirection.z == 0 && Y != 0 ? (int)(Y * -1.0f / Mathf.Abs(Y)) : Mathf.RoundToInt(rawDirection.z);
             Vector2Int directionVector2 = new Vector2Int(newX, newY);
