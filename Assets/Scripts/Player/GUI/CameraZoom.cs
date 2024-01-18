@@ -1,5 +1,7 @@
+using System;
 using Cinemachine;
 using System.Collections;
+using Player;
 using UnityEngine;
 
 namespace Bonehead.Combat.Player.UI
@@ -11,7 +13,7 @@ namespace Bonehead.Combat.Player.UI
         private CinemachineVirtualCamera _cinemachineVirtualCamera;
 
         public float BeginCameraOrthoSize { get; private set; }
-
+        
         public void HandleCameraZoom(float endCameraOrthoSize, float zoomTime)
         {
             if (_coroutine != null)
@@ -23,10 +25,23 @@ namespace Bonehead.Combat.Player.UI
             StartCoroutine(_coroutine);
         }
 
+        private void HandleCameraZoom(CameraZoomEventArgs args) =>
+            HandleCameraZoom(args.EndCameraOrthoSize, args.ZoomTime);
+
         private void Awake()
         {
             _cinemachineVirtualCamera = GetComponent<CinemachineVirtualCamera>();
             BeginCameraOrthoSize = _cinemachineVirtualCamera.m_Lens.OrthographicSize;
+        }
+
+        private void OnEnable()
+        {
+            EventManager.Subscribe<CameraZoomEventArgs>(HandleCameraZoom);
+        }
+
+        private void OnDisable()
+        {
+            EventManager.Unsubscribe<CameraZoomEventArgs>(HandleCameraZoom);
         }
 
         private IEnumerator CameraZoomRoutine(float endCameraOrthoSize, float zoomTime)
